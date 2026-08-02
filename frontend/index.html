@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💕 我们的星空展台</title>
+    <style>
+        /* ===== 全局浪漫风格 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #1a0b1a;
+            color: white;
+            user-select: none;
+        }
+
+        /* ===== 顶部标题 ===== */
+        .header {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+            text-shadow: 0 0 30px rgba(255, 105, 180, 0.4);
+        }
+        .header span {
+            background: rgba(26, 11, 26, 0.7);
+            padding: 10px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 182, 193, 0.2);
+            font-size: 20px;
+            letter-spacing: 4px;
+            color: #ffb6c1;
+            display: inline-block;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ===== 底部提示 ===== */
+        .tip {
+            position: fixed;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            letter-spacing: 2px;
+            pointer-events: none;
+        }
+        .tip i {
+            font-style: normal;
+            display: inline-block;
+            animation: floatUp 2.5s ease-in-out infinite;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 182, 193, 0.1);
+        }
+        @keyframes floatUp {
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(-8px);
+                opacity: 1;
+            }
+        }
+
+        /* ===== 统计信息 ===== */
+        .stats {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            padding: 12px 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 182, 193, 0.1);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.8;
+            pointer-events: none;
+        }
+        .stats .num {
+            color: #ffb6c1;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* ===== 照片备注弹窗 ===== */
+        .photo-note-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            animation: fadeIn 0.4s ease;
+        }
+        .photo-note-modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .photo-note-modal .modal-content {
+            background: rgba(26, 11, 26, 0.9);
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 600px;
+            width: 95%;
+            border: 1px solid rgba(255, 182, 193, 0.15);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .photo-note-modal .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 32px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 10;
+            line-height: 1;
+        }
+        .photo-note-modal .close-btn:hover {
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .photo-note-modal .modal-image-wrap {
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        .photo-note-modal .modal-image-wrap img {
+            width: 100%;
+            height: auto;
+            max-height: 50vh;
+            object-fit: contain;
+            display: block;
+        }
+
+        .photo-note-modal .modal-note {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px 25px;
+            border-radius: 16px;
+            border-left: 4px solid #ff6b9d;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #f0e0e6;
+            margin-bottom: 15px;
+            min-height: 60px;
+        }
+
+        .photo-note-modal .modal-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .photo-note-modal .btn {
+            padding: 10px 28px;
+            border-radius: 50px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .photo-note-modal .btn-edit {
+            background: rgba(255, 107, 157, 0.15);
+            border: 1px solid rgba(255, 107, 157, 0.3);
+            color: #ffb6c1;
+        }
+        .photo-note-modal .btn-edit:hover {
+            background: rgba(255, 107, 157, 0.3);
+            transform: scale(1.05);
+        }
+
+        .photo-note-modal .btn-like {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+        }
+        .photo-note-modal .btn-like:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.05);
+        }
+        .photo-note-modal .btn-like.liked {
+            background: rgba(255, 215, 0, 0.25);
+            border-color: #ffd700;
+        }
+
+        .photo-note-modal .btn-close-modal {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .photo-note-modal .btn-close-modal:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== 自定义编辑弹窗 ===== */
+        .custom-edit-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .custom-edit-box {
+            background: linear-gradient(145deg, #1a0b1a, #2d1b2d);
+            border-radius: 30px;
+            padding: 35px 40px;
+            max-width: 520px;
+            width: 92%;
+            border: 2px solid rgba(255, 107, 157, 0.2);
+            box-shadow: 0 30px 80px rgba(255, 105, 180, 0.15);
+            animation: slideUp 0.4s ease;
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes heartBeat {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-8px);
+            }
+            75% {
+                transform: translateX(8px);
+            }
+        }
+
+        .custom-edit-box .edit-heart {
+            text-align: center;
+            font-size: 42px;
+            animation: heartBeat 1.8s infinite;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .custom-edit-box .edit-title {
+            color: #ffb6c1;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .custom-edit-box .current-note-wrap {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 12px 18px;
+            margin-bottom: 18px;
+            border-left: 3px solid #ff6b9d;
+        }
+        .custom-edit-box .current-note-wrap .label {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 11px;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+        .custom-edit-box .current-note-wrap .text {
+            color: #f0e0e6;
+            font-size: 15px;
+            line-height: 1.6;
+            word-break: break-all;
+        }
+
+        .custom-edit-box .edit-label {
+            color: #ffb6c1;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .custom-edit-box .edit-textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 107, 157, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: #f0e0e6;
+            font-size: 16px;
+            line-height: 1.8;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .custom-edit-box .edit-textarea:focus {
+            border-color: #ff6b9d;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.1);
+        }
+
+        .custom-edit-box .edit-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .custom-edit-box .edit-btn {
+            padding: 11px 35px;
+            border-radius: 50px;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+        .custom-edit-box .edit-btn-cancel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .custom-edit-box .edit-btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .custom-edit-box .edit-btn-save {
+            background: linear-gradient(135deg, #ff6b9d, #ff1493);
+            color: white;
+            box-shadow: 0 8px 25px rgba(255, 20, 147, 0.25);
+        }
+        .custom-edit-box .edit-btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(255, 20, 147, 0.35);
+        }
+
+        .custom-edit-box .edit-footer {
+            text-align: center;
+            margin-top: 16px;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        /* ===== 成功提示 ===== */
+        .success-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 99999;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            padding: 40px 50px;
+            border: 2px solid rgba(255, 107, 157, 0.2);
+            animation: fadeIn 0.5s ease;
+            text-align: center;
+            min-width: 280px;
+        }
+        .success-toast .icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+        .success-toast .msg {
+            color: #ffb6c1;
+            font-size: 22px;
+            letter-spacing: 3px;
+            font-weight: 300;
+        }
+        .success-toast .sub {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+            margin-top: 8px;
+            letter-spacing: 2px;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 600px) {
+            .header span {
+                font-size: 15px;
+                padding: 6px 18px;
+            }
+            .stats {
+                display: none;
+            }
+            .photo-note-modal .modal-content {
+                padding: 20px;
+            }
+            .photo-note-modal .modal-note {
+                font-size: 14px;
+                padding: 15px 18px;
+            }
+            .custom-edit-box {
+                padding: 25px 20px;
+            }
+            .custom-edit-box .edit-title {
+                font-size: 17px;
+            }
+            .custom-edit-box .edit-btn {
+                padding: 9px 24px;
+                font-size: 13px;
+            }
+            .tip {
+                bottom: 15px;
+                font-size: 11px;
+            }
+            .tip i {
+                padding: 5px 14px;
+            }
+            .user-info {
+                top: 10px !important;
+                right: 10px !important;
+                font-size: 11px !important;
+                padding: 4px 12px !important;
+            }
+            .manage-buttons {
+                bottom: 70px !important;
+                right: 10px !important;
+            }
+            .manage-buttons button {
+                padding: 10px 14px !important;
+                font-size: 16px !important;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .header span {
+                font-size: 13px;
+                padding: 5px 14px;
+                letter-spacing: 2px;
+            }
+            .photo-note-modal .modal-content {
+                padding: 15px;
+                border-radius: 20px;
+            }
+            .photo-note-modal .modal-note {
+                font-size: 13px;
+                padding: 12px 15px;
+            }
+            .custom-edit-box {
+                padding: 20px 15px;
+                border-radius: 20px;
+            }
+        }
+
+        /* ===== 滚动条美化 ===== */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 107, 157, 0.3);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 107, 157, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 顶部标题 ===== -->
+    <div class="header">
+        <span>✨ 我们的星空展台 ✨</span>
+    </div>
+
+    <!-- ===== 用户信息 + 导航（右上角） ===== -->
+    <div style="position:fixed;top:20px;right:20px;z-index:10;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+        <div class="user-info" style="color:rgba(255,255,255,0.6);font-size:13px;letter-spacing:1px;background:rgba(0,0,0,0.4);padding:8px 16px;border-radius:20px;backdrop-filter:blur(5px);border:1px solid rgba(255,182,193,0.1);">
+            💕 <span id="usernameDisplay">用户</span>
+            <button onclick="handleLogout()" style="background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:12px;margin-left:10px;transition:0.3s;" onmouseover="this.style.color='#ff6b9d'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">退出</button>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
+            <a href="index.html" style="color:rgba(255,255,255,0.4);text-decoration:none;font-size:12px;padding:4px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.05);transition:0.3s;background:rgba(0,0,0,0.2);backdrop-filter:blur(4px);" onmouseover="this.style.color='#ffb6c1';this.style.borderColor='rgba(255,107,157,0.3)'" onmouseout="this.style.color='rgba(255,255,255,0.4)';this.style.borderColor='rgba(255,255,255,0.05)'">🏠 展台</a>
+            <a href="anniversary.html" style="color:rgba(255,255,255,0.4);text-decoration:none;font-size:12px;padding:4px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.05);transition:0.3s;background:rgba(0,0,0,0.2);backdrop-filter:blur(4px);" onmouseover="this.style.color='#ffb6c1';this.style.borderColor='rgba(255,107,157,0.3)'" onmouseout="this.style.color='rgba(255,255,255,0.4)';this.style.borderColor='rgba(255,255,255,0.05)'">📅 纪念日</a>
+            <a href="love_letter.html" style="color:rgba(255,255,255,0.4);text-decoration:none;font-size:12px;padding:4px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.05);transition:0.3s;background:rgba(0,0,0,0.2);backdrop-filter:blur(4px);" onmouseover="this.style.color='#ffb6c1';this.style.borderColor='rgba(255,107,157,0.3)'" onmouseout="this.style.color='rgba(255,255,255,0.4)';this.style.borderColor='rgba(255,255,255,0.05)'">💌 情书</a>
+        </div>
+    </div>
+
+    <!-- ===== 统计信息 ===== -->
+    <div class="stats" id="statsInfo">
+        📸 <span class="num" id="photoCount">0</span> 张回忆
+        <br>❤️ 相恋 <span class="num" id="daysCount">0</span> 天
+    </div>
+
+    <!-- ===== 底部提示 ===== -->
+    <div class="tip">
+        <i>👆 手指拖动旋转 · 点击照片查看备注</i>
+    </div>
+
+    <!-- ===== 管理按钮（右下角） ===== -->
+    <div class="manage-buttons" style="position:fixed;bottom:80px;right:20px;z-index:10;display:flex;gap:10px;flex-direction:column;">
+        <button onclick="showUploadModal()" style="padding:14px 18px;border-radius:50%;border:none;background:linear-gradient(135deg,#ff6b9d,#ff1493);color:white;font-size:22px;cursor:pointer;box-shadow:0 8px 30px rgba(255,20,147,0.3);transition:0.3s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+            📸
+        </button>
+        <button onclick="showManageModal()" style="padding:14px 18px;border-radius:50%;border:none;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);font-size:18px;cursor:pointer;backdrop-filter:blur(5px);border:1px solid rgba(255,182,193,0.1);transition:0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+            ⚙️
+        </button>
+    </div>
+
+    <!-- ===== 3D容器 ===== -->
+    <div id="three-container"></div>
+
+    <!-- ===== 照片备注弹窗 ===== -->
+    <div class="photo-note-modal" id="noteModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">✕</button>
+
+            <div class="modal-image-wrap">
+                <img id="modalImage" src="" alt="照片">
+            </div>
+
+            <div class="modal-note" id="modalNote">
+                这里显示照片的备注留言 💕
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-edit" id="editNoteBtn">📝 编辑备注</button>
+                <button class="btn btn-like" id="likeBtn">❤️ 喜欢</button>
+                <button class="btn btn-close-modal" id="closeModalBtn">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 引入 Three.js ===== -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        // ===================================================
+        // 1. 导入 Three.js
+        // ===================================================
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+        // ===================================================
+        // 2. API 地址
+        // ===================================================
+        const API_BASE_URL = 'http://localhost:3000';
+
+        // ===================================================
+        // 3. 用户状态管理
+        // ===================================================
+        const user = JSON.parse(localStorage.getItem('love_user') || 'null');
+        if (!user) {
+            window.location.href = 'login.html';
+        } else {
+            const nameDisplay = document.getElementById('usernameDisplay');
+            if (nameDisplay) nameDisplay.textContent = user.username;
+        }
+
+        window.handleLogout = function() {
+            if (confirm('确定要退出吗？ 💕')) {
+                localStorage.removeItem('love_user');
+                window.location.href = 'login.html';
+            }
+        };
+
+        // ===================================================
+        // 4. 照片数据（从服务器动态加载）
+        // ===================================================
+        let photosData = [];
+        const photoGroup = new THREE.Group();
+        const photoMeshes = [];
+        let loadedCount = 0;
+        let scene, camera, renderer, labelRenderer, controls, stars, nearStars;
+
+        // 从服务器获取照片列表
+        async function loadPhotosFromServer() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/photos/list`);
+                const result = await response.json();
+                if (result.success) {
+                    const photos = result.data.photos || [];
+                    photosData = photos.map(p => ({
+                        id: p.id,
+                        url: `/photos/${p.id}.jpg`,
+                        note: p.note || '💕 回忆',
+                        category: p.category || '默认',
+                        taken_date: p.taken_date || null
+                    }));
+                    console.log('✅ 从服务器加载照片列表成功，共 ' + photosData.length + ' 张');
+                    document.getElementById('photoCount').textContent = photosData.length;
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.warn('⚠️ 从服务器加载照片列表失败:', error);
+                return false;
+            }
+        }
+
+        // 创建单张照片
+        function createPhotoMesh(data, index, total) {
+            const photoWidth = 1.3;
+            const photoHeight = 1.3;
+            const radius = 3.8;
+            
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.src = data.url;
+
+            img.onload = () => {
+                loadedCount++;
+                const canvas = document.createElement('canvas');
+                canvas.width = 512;
+                canvas.height = 512;
+                const ctx = canvas.getContext('2d');
+
+                const cornerRadius = 40;
+                const w = canvas.width;
+                const h = canvas.height;
+
+                ctx.beginPath();
+                ctx.moveTo(cornerRadius, 0);
+                ctx.lineTo(w - cornerRadius, 0);
+                ctx.quadraticCurveTo(w, 0, w, cornerRadius);
+                ctx.lineTo(w, h - cornerRadius);
+                ctx.quadraticCurveTo(w, h, w - cornerRadius, h);
+                ctx.lineTo(cornerRadius, h);
+                ctx.quadraticCurveTo(0, h, 0, h - cornerRadius);
+                ctx.lineTo(0, cornerRadius);
+                ctx.quadraticCurveTo(0, 0, cornerRadius, 0);
+                ctx.closePath();
+                ctx.clip();
+
+                const imgRatio = img.width / img.height;
+                const canvasRatio = w / h;
+                let sx, sy, sw, sh;
+                if (imgRatio > canvasRatio) {
+                    sw = img.height * canvasRatio;
+                    sh = img.height;
+                    sx = (img.width - sw) / 2;
+                    sy = 0;
+                } else {
+                    sw = img.width;
+                    sh = img.width / canvasRatio;
+                    sx = 0;
+                    sy = (img.height - sh) / 2;
+                }
+                ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+
+                ctx.strokeStyle = 'rgba(255, 182, 193, 0.3)';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(0, 0, w, h);
+
+                const finalTexture = new THREE.CanvasTexture(canvas);
+
+                const material = new THREE.MeshStandardMaterial({
+                    map: finalTexture,
+                    side: THREE.DoubleSide,
+                    roughness: 0.25,
+                    metalness: 0.05,
+                    emissive: new THREE.Color(0x221122),
+                    emissiveIntensity: 0.1
+                });
+
+                const geometry = new THREE.PlaneGeometry(photoWidth, photoHeight);
+                const mesh = new THREE.Mesh(geometry, material);
+
+                const phi = Math.acos(-1 + (2 * (index + 0.5)) / total);
+                const theta = Math.sqrt(total * Math.PI) * phi;
+
+                const x = radius * Math.sin(phi) * Math.cos(theta);
+                const y = radius * Math.sin(phi) * Math.sin(theta) * 0.8;
+                const z = radius * Math.cos(phi);
+
+                mesh.position.set(x, y, z);
+                mesh.lookAt(0, 0, 0);
+                mesh.rotation.z += (Math.random() - 0.5) * 0.15;
+
+                mesh.userData = {
+                    id: data.id,
+                    note: data.note,
+                    url: data.url,
+                    index: index
+                };
+
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+
+                photoGroup.add(mesh);
+                photoMeshes.push(mesh);
+
+                const labelDiv = document.createElement('div');
+                labelDiv.textContent = '💕';
+                labelDiv.style.color = '#ff6b9d';
+                labelDiv.style.fontSize = '18px';
+                labelDiv.style.textShadow = '0 0 25px rgba(255, 107, 157, 0.6)';
+                labelDiv.style.background = 'rgba(0,0,0,0.25)';
+                labelDiv.style.borderRadius = '50%';
+                labelDiv.style.width = '36px';
+                labelDiv.style.height = '36px';
+                labelDiv.style.display = 'flex';
+                labelDiv.style.alignItems = 'center';
+                labelDiv.style.justifyContent = 'center';
+                labelDiv.style.backdropFilter = 'blur(4px)';
+                labelDiv.style.border = '1px solid rgba(255, 182, 193, 0.1)';
+                labelDiv.style.fontSize = '16px';
+
+                const label = new CSS2DObject(labelDiv);
+                label.position.set(x, y - 0.85, z);
+                photoGroup.add(label);
+
+                if (loadedCount === photosData.length) {
+                    console.log('✅ 所有照片加载完成！共 ' + photosData.length + ' 张');
+                }
+            };
+
+            img.onerror = () => {
+                console.warn('⚠️ 照片加载失败，使用占位图:', data.url);
+                const fallbackImg = new Image();
+                fallbackImg.crossOrigin = 'anonymous';
+                fallbackImg.src = `https://picsum.photos/seed/${data.id}/400/400`;
+                fallbackImg.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 512;
+                    canvas.height = 512;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#2d1b2d';
+                    ctx.fillRect(0, 0, 512, 512);
+                    ctx.fillStyle = '#ffb6c1';
+                    ctx.font = '40px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('📸 #' + data.id, 256, 256);
+                    
+                    const texture = new THREE.CanvasTexture(canvas);
+                    const material = new THREE.MeshStandardMaterial({
+                        map: texture,
+                        side: THREE.DoubleSide,
+                        roughness: 0.3,
+                        metalness: 0.05
+                    });
+                    const geometry = new THREE.PlaneGeometry(photoWidth, photoHeight);
+                    const mesh = new THREE.Mesh(geometry, material);
+
+                    const phi = Math.acos(-1 + (2 * (index + 0.5)) / total);
+                    const theta = Math.sqrt(total * Math.PI) * phi;
+                    const x = radius * Math.sin(phi) * Math.cos(theta);
+                    const y = radius * Math.sin(phi) * Math.sin(theta) * 0.8;
+                    const z = radius * Math.cos(phi);
+
+                    mesh.position.set(x, y, z);
+                    mesh.lookAt(0, 0, 0);
+                    mesh.userData = {
+                        id: data.id,
+                        note: data.note,
+                        url: data.url,
+                        index: index
+                    };
+                    photoGroup.add(mesh);
+                    photoMeshes.push(mesh);
+                };
+            };
+        }
+
+        // ===================================================
+        // 5. 刷新照片数据（不刷新页面）
+        // ===================================================
+        async function refreshPhotoData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/photos/list`);
+                const result = await response.json();
+                if (result.success) {
+                    const photos = result.data.photos || [];
+                    photosData = photos.map(p => ({
+                        id: p.id,
+                        url: `/photos/${p.id}.jpg`,
+                        note: p.note || '💕 回忆',
+                        category: p.category || '默认',
+                        taken_date: p.taken_date || null
+                    }));
+                    
+                    document.getElementById('photoCount').textContent = photosData.length;
+                    
+                    // 清除旧的照片
+                    while(photoGroup.children.length > 0) {
+                        photoGroup.remove(photoGroup.children[0]);
+                    }
+                    photoMeshes.length = 0;
+                    loadedCount = 0;
+                    
+                    // 重新创建所有照片
+                    photosData.forEach((data, index) => {
+                        createPhotoMesh(data, index, photosData.length);
+                    });
+                    
+                    console.log('✅ 照片数据已刷新，共 ' + photosData.length + ' 张');
+                }
+            } catch (error) {
+                console.warn('⚠️ 刷新照片数据失败:', error);
+            }
+        }
+
+        // 导出 refreshPhotoData 到全局
+        window.refreshPhotoData = refreshPhotoData;
+
+        // ===================================================
+        // 6. 初始化场景
+        // ===================================================
+        function initScene() {
+            const container = document.getElementById('three-container');
+            container.style.width = '100vw';
+            container.style.height = '100vh';
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a0b1a);
+
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 1, 8);
+            camera.lookAt(0, 0, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
+            container.appendChild(renderer.domElement);
+
+            labelRenderer = new CSS2DRenderer();
+            labelRenderer.setSize(window.innerWidth, window.innerHeight);
+            labelRenderer.domElement.style.position = 'absolute';
+            labelRenderer.domElement.style.top = '0px';
+            labelRenderer.domElement.style.left = '0px';
+            labelRenderer.domElement.style.pointerEvents = 'none';
+            container.appendChild(labelRenderer.domElement);
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 1.8;
+            controls.enableZoom = true;
+            controls.zoomSpeed = 0.8;
+            controls.minDistance = 2.5;
+            controls.maxDistance = 15;
+            controls.target.set(0, 0, 0);
+
+            // 光源
+            const ambientLight = new THREE.AmbientLight(0x404060, 0.6);
+            scene.add(ambientLight);
+
+            const mainLight = new THREE.DirectionalLight(0xffddcc, 1.5);
+            mainLight.position.set(5, 10, 7);
+            mainLight.castShadow = true;
+            scene.add(mainLight);
+
+            const fillLight = new THREE.DirectionalLight(0x8888ff, 0.5);
+            fillLight.position.set(-5, 0, 5);
+            scene.add(fillLight);
+
+            const rimLight = new THREE.DirectionalLight(0xff6b9d, 0.4);
+            rimLight.position.set(0, -3, -5);
+            scene.add(rimLight);
+
+            const pointLight = new THREE.PointLight(0xff1493, 0.3, 15);
+            pointLight.position.set(0, 2, 0);
+            scene.add(pointLight);
+
+            // 星空粒子
+            const starsGeometry = new THREE.BufferGeometry();
+            const starsCount = 1200;
+            const starsPositions = new Float32Array(starsCount * 3);
+            const starsColors = new Float32Array(starsCount * 3);
+            for (let i = 0; i < starsCount; i++) {
+                const radius = 50 + Math.random() * 100;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                starsPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+                starsPositions[i * 3 + 1] = radius * Math.cos(phi);
+                starsPositions[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
+                const color = new THREE.Color().setHSL(0.9 + Math.random() * 0.1, 0.5, 0.5 + Math.random() * 0.3);
+                starsColors[i * 3] = color.r;
+                starsColors[i * 3 + 1] = color.g;
+                starsColors[i * 3 + 2] = color.b;
+            }
+            starsGeometry.setAttribute('position', new THREE.BufferAttribute(starsPositions, 3));
+            starsGeometry.setAttribute('color', new THREE.BufferAttribute(starsColors, 3));
+
+            const starsMaterial = new THREE.PointsMaterial({
+                size: 0.15,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.9,
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true
+            });
+            stars = new THREE.Points(starsGeometry, starsMaterial);
+            scene.add(stars);
+
+            const nearStarsGeo = new THREE.BufferGeometry();
+            const nearCount = 300;
+            const nearPos = new Float32Array(nearCount * 3);
+            for (let i = 0; i < nearCount; i++) {
+                nearPos[i * 3] = (Math.random() - 0.5) * 60;
+                nearPos[i * 3 + 1] = (Math.random() - 0.5) * 60;
+                nearPos[i * 3 + 2] = (Math.random() - 0.5) * 60 - 20;
+            }
+            nearStarsGeo.setAttribute('position', new THREE.BufferAttribute(nearPos, 3));
+            const nearStarsMat = new THREE.PointsMaterial({
+                color: 0xffaacc,
+                size: 0.06,
+                transparent: true,
+                opacity: 0.4,
+                blending: THREE.AdditiveBlending
+            });
+            nearStars = new THREE.Points(nearStarsGeo, nearStarsMat);
+            scene.add(nearStars);
+
+            // 照片组
+            scene.add(photoGroup);
+
+            // 窗口自适应
+            window.addEventListener('resize', () => {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                camera.aspect = w / h;
+                camera.updateProjectionMatrix();
+                renderer.setSize(w, h);
+                labelRenderer.setSize(w, h);
+            });
+
+            // 动画循环
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+               // 立牌浮动动画
+                if (window._figures && window._figures.mesh) {
+                    window._figures.time += 0.02;
+                    const t = window._figures.time;
+                    
+                    // 上下浮动
+                    const floatY = Math.sin(t * 0.6) * 0.04;
+                    window._figures.mesh.position.y = floatY;
+                    window._figures.border.position.y = floatY;
+                    window._figures.glow.position.y = -0.75 + floatY * 0.5;
+                    
+                    // 缓慢旋转
+                    window._figures.mesh.rotation.y = Math.sin(t * 0.12) * 0.08;
+                    window._figures.border.rotation.y = Math.sin(t * 0.12) * 0.08;
+                    
+                    // 光晕脉动
+                    const gp = 1 + Math.sin(t * 0.5) * 0.08;
+                    window._figures.glow.scale.set(gp, gp, gp);
+                }
+                if (stars) {
+                    stars.rotation.y += 0.00015;
+                    stars.rotation.x += 0.00005;
+                }
+                if (nearStars) {
+                    nearStars.rotation.y += 0.0003;
+                }
+                const time = Date.now() * 0.0005;
+                photoMeshes.forEach((mesh, i) => {
+                    const offset = i * 0.3;
+                    const scale = 1 + Math.sin(time + offset) * 0.008;
+                    mesh.scale.set(scale, scale, scale);
+                });
+                renderer.render(scene, camera);
+                labelRenderer.render(scene, camera);
+            }
+            animate();
+            addCoupleFigures();
+            console.log('💕 3D场景初始化完成');
+        }
+      
+        // ===================================================
+        // 添加漫画照立牌（稳定版）
+        // ===================================================
+        function addCoupleFigures() {
+            try {
+                console.log('📸 开始加载漫画照...');
+                
+                const textureLoader = new THREE.TextureLoader();
+                const coupleTexture = textureLoader.load(
+                    '/photos/couple.png',
+                    () => console.log('✅ 漫画照加载成功'),
+                    undefined,
+                    (err) => console.warn('⚠️ 漫画照加载失败:', err)
+                );
+                
+                // 创建立牌
+                const width = 1.2;
+                const height = 1.6;
+                
+                const material = new THREE.MeshStandardMaterial({
+                    map: coupleTexture,
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    roughness: 0.2,
+                    metalness: 0.05,
+                    emissive: new THREE.Color(0xffffff),
+                    emissiveIntensity: 0.05
+                });
+                
+                const geometry = new THREE.PlaneGeometry(width, height);
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.position.set(0, 0, 0);
+                scene.add(mesh);
+                
+                // 发光边框
+                const borderMat = new THREE.MeshStandardMaterial({
+                    color: '#ff6b9d',
+                    transparent: true,
+                    opacity: 0.12,
+                    side: THREE.DoubleSide,
+                    emissive: '#ff6b9d',
+                    emissiveIntensity: 0.05
+                });
+                const borderGeo = new THREE.PlaneGeometry(width + 0.06, height + 0.06);
+                const border = new THREE.Mesh(borderGeo, borderMat);
+                border.position.set(0, 0, -0.01);
+                scene.add(border);
+                
+                // 底部光晕
+                const glowMat = new THREE.MeshStandardMaterial({
+                    color: '#ff6b9d',
+                    transparent: true,
+                    opacity: 0.06,
+                    emissive: '#ff6b9d',
+                    emissiveIntensity: 0.1,
+                    side: THREE.DoubleSide
+                });
+                const glowGeo = new THREE.CircleGeometry(0.7, 16);
+                const glow = new THREE.Mesh(glowGeo, glowMat);
+                glow.position.set(0, -0.75, 0);
+                glow.rotation.x = -Math.PI / 2;
+                scene.add(glow);
+                
+                // 保存引用
+                window._figures = {
+                    mesh: mesh,
+                    border: border,
+                    glow: glow,
+                    time: 0
+                };
+                
+                console.log('💕 漫画照立牌已添加到展台');
+                
+            } catch (error) {
+                console.error('❌ 添加立牌失败:', error);
+            }
+        }
+        // ===================================================
+        // 7. 加载数据并初始化
+        // ===================================================
+        await loadPhotosFromServer();
+
+        // 更新相恋天数
+        async function loadLoveDays() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/anniversaries?user_id=${user.id}`);
+                const result = await response.json();
+                if (result.success && result.data.length > 0) {
+                    let loveItem = result.data.find(item => item.category === '恋爱纪念日');
+                    if (!loveItem) {
+                        loveItem = result.data.find(item => 
+                            item.title.includes('在一起') || 
+                            item.title.includes('恋爱') ||
+                            item.title.includes('相恋')
+                        );
+                    }
+                    if (!loveItem && result.data.length > 0) {
+                        const sorted = [...result.data].sort((a, b) => 
+                            new Date(a.event_date) - new Date(b.event_date)
+                        );
+                        loveItem = sorted[0];
+                    }
+                    if (loveItem) {
+                        const eventDate = new Date(loveItem.event_date);
+                        const today = new Date();
+                        const start = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+                        const end = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                        const diffTime = end - start;
+                        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                        document.getElementById('daysCount').textContent = diffDays >= 0 ? diffDays : '💕';
+                        console.log('✅ 从纪念日获取相恋天数:', diffDays, `(${loveItem.title})`);
+                        return;
+                    }
+                }
+                const startDate = new Date('2024-01-01');
+                const today = new Date();
+                const diffTime = today - startDate;
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('daysCount').textContent = diffDays > 0 ? diffDays : '💕';
+            } catch (error) {
+                console.warn('⚠️ 获取纪念日失败，使用默认天数:', error);
+                const startDate = new Date('2024-01-01');
+                const today = new Date();
+                const diffTime = today - startDate;
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('daysCount').textContent = diffDays > 0 ? diffDays : '💕';
+            }
+        }
+
+        await loadLoveDays();
+
+        // 初始化3D场景
+        initScene();
+
+        // 创建照片
+        photosData.forEach((data, index) => {
+            createPhotoMesh(data, index, photosData.length);
+        });
+
+        // ===================================================
+        // 8. 射线检测
+        // ===================================================
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2();
+
+        function getPointer(clientX, clientY) {
+            const rect = renderer.domElement.getBoundingClientRect();
+            pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+            pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+        }
+
+        function handlePhotoClick(clientX, clientY) {
+            getPointer(clientX, clientY);
+            raycaster.setFromCamera(pointer, camera);
+            const intersects = raycaster.intersectObjects(photoMeshes);
+            if (intersects.length > 0) {
+                const hitMesh = intersects[0].object;
+                const data = hitMesh.userData;
+                if (data && data.note) {
+                    showPhotoModal(data.url, data.note, data.id);
+                }
+            }
+        }
+
+        renderer.domElement.addEventListener('click', (e) => {
+            handlePhotoClick(e.clientX, e.clientY);
+        });
+
+        renderer.domElement.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                const touch = e.touches[0];
+                handlePhotoClick(touch.clientX, touch.clientY);
+            }
+        }, { passive: true });
+
+        // ===================================================
+        // 9. 弹窗控制
+        // ===================================================
+        const modal = document.getElementById('noteModal');
+        const modalImg = document.getElementById('modalImage');
+        const modalNote = document.getElementById('modalNote');
+        const closeBtn = document.getElementById('closeModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const editBtn = document.getElementById('editNoteBtn');
+        const likeBtn = document.getElementById('likeBtn');
+
+        let currentPhotoId = null;
+        let isLiked = false;
+
+        async function loadAllNotesFromServer() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/photos/notes`);
+                const result = await response.json();
+                if (result.success) {
+                    return result.data;
+                }
+                return {};
+            } catch (error) {
+                console.warn('⚠️ 从服务器加载备注失败:', error);
+                return {};
+            }
+        }
+
+        async function showPhotoModal(url, note, id) {
+            try {
+                const allNotes = await loadAllNotesFromServer();
+                if (allNotes[id]) {
+                    note = allNotes[id];
+                    const photo = photosData.find(p => p.id === id);
+                    if (photo) photo.note = allNotes[id];
+                }
+            } catch (error) {
+                console.warn('⚠️ 加载备注失败，使用本地数据');
+            }
+
+            modalImg.src = url;
+            modalNote.textContent = note;
+            currentPhotoId = id;
+            isLiked = false;
+            likeBtn.textContent = '❤️ 喜欢';
+            likeBtn.classList.remove('liked');
+            modal.classList.add('active');
+            controls.autoRotate = false;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModalFn() {
+            modal.classList.remove('active');
+            controls.autoRotate = true;
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', closeModalFn);
+        closeModalBtn.addEventListener('click', closeModalFn);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModalFn();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModalFn();
+        });
+
+        likeBtn.addEventListener('click', () => {
+            isLiked = !isLiked;
+            if (isLiked) {
+                likeBtn.textContent = '💖 已喜欢';
+                likeBtn.classList.add('liked');
+                createHeartRain();
+            } else {
+                likeBtn.textContent = '❤️ 喜欢';
+                likeBtn.classList.remove('liked');
+            }
+        });
+
+        function createHeartRain() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.textContent = ['❤️', '💕', '💖', '✨', '🌸'][Math.floor(Math.random() * 5)];
+                    heart.style.cssText = `
+                        position: fixed;
+                        font-size: ${20 + Math.random() * 30}px;
+                        left: ${10 + Math.random() * 80}%;
+                        top: -30px;
+                        z-index: 99999;
+                        pointer-events: none;
+                        animation: heartFall ${2 + Math.random() * 2}s ease-in forwards;
+                        opacity: ${0.5 + Math.random() * 0.5};
+                    `;
+                    document.body.appendChild(heart);
+                    setTimeout(() => {
+                        if (heart.parentNode) heart.remove();
+                    }, 4000);
+                }, i * 100);
+            }
+        }
+
+        const heartStyle = document.createElement('style');
+        heartStyle.textContent = `
+            @keyframes heartFall {
+                0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 1; }
+                100% { transform: translateY(110vh) rotate(720deg) scale(1.2); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(heartStyle);
+
+        // ===================================================
+        // 10. 编辑备注
+        // ===================================================
+        editBtn.addEventListener('click', () => {
+            const currentNote = modalNote.textContent;
+
+            const nicknames = ['宝贝', '小可爱', '老婆大人', '我的心上人', '小仙女', '我家那位', '亲爱的', '宇宙第一美'];
+            const randomNick = nicknames[Math.floor(Math.random() * nicknames.length)];
+
+            const emotions = ['😊', '🥰', '😘', '🤗', '💕', '✨', '🌸', '🎀', '💖', '🌟'];
+            const randomEmoji = emotions[Math.floor(Math.random() * emotions.length)];
+
+            const overlay = document.createElement('div');
+            overlay.className = 'custom-edit-overlay';
+
+            overlay.innerHTML = `
+                <div class="custom-edit-box">
+                    <span class="edit-heart">💖</span>
+                    <div class="edit-title">✨ 给 ${randomNick} 的情话修改 ✨</div>
+
+                    <div class="current-note-wrap">
+                        <div class="label">📝 当前备注</div>
+                        <div class="text">"${currentNote}"</div>
+                    </div>
+
+                    <label class="edit-label">💭 写下你想对 ${randomNick} 说的新情话：</label>
+                    <textarea class="edit-textarea" id="newNoteInput" placeholder="输入你的新备注... ${randomEmoji}">${currentNote}</textarea>
+
+                    <div class="edit-actions">
+                        <button class="edit-btn edit-btn-cancel" id="cancelCustomBtn">算了，不改了 😅</button>
+                        <button class="edit-btn edit-btn-save" id="saveCustomBtn">💕 保存情话</button>
+                    </div>
+
+                    <div class="edit-footer">${randomNick} 看到一定会很开心的 🥰</div>
+                </div>
+            `;
+
+            document.body.appendChild(overlay);
+
+            const textarea = overlay.querySelector('#newNoteInput');
+            setTimeout(() => textarea.focus(), 150);
+            textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
+            overlay.querySelector('#cancelCustomBtn').addEventListener('click', () => {
+                document.body.removeChild(overlay);
+            });
+
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) document.body.removeChild(overlay);
+            });
+
+            overlay.querySelector('#saveCustomBtn').addEventListener('click', async () => {
+                const newNote = textarea.value.trim();
+                if (newNote === '') {
+                    textarea.style.borderColor = '#ff6b9d';
+                    textarea.style.boxShadow = '0 0 30px rgba(255, 107, 157, 0.2)';
+                    textarea.style.animation = 'shake 0.4s ease';
+
+                    const tip = document.createElement('div');
+                    tip.style.cssText = `
+                        color: #ffb6c1;
+                        text-align: center;
+                        font-size: 13px;
+                        margin-top: 10px;
+                        animation: fadeIn 0.3s ease;
+                    `;
+                    tip.textContent = '😝 不能为空哦！写点甜言蜜语嘛～';
+                    const actions = overlay.querySelector('.edit-actions');
+                    actions.parentNode.insertBefore(tip, actions);
+                    setTimeout(() => {
+                        if (tip.parentNode) tip.remove();
+                        textarea.style.borderColor = 'rgba(255, 107, 157, 0.2)';
+                        textarea.style.boxShadow = 'none';
+                        textarea.style.animation = '';
+                    }, 2500);
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/photo/note`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            photoId: currentPhotoId,
+                            note: newNote
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        modalNote.textContent = newNote;
+                        const photo = photosData.find(p => p.id === currentPhotoId);
+                        if (photo) photo.note = newNote;
+                        document.body.removeChild(overlay);
+                        showSuccessToast('💖', '情话已保存到云端！', '永远珍藏 ❤️');
+                        refreshPhotoData();
+                    } else {
+                        throw new Error(result.message || '保存失败');
+                    }
+                } catch (error) {
+                    console.error('保存失败:', error);
+                    const errorDiv = document.createElement('div');
+                    errorDiv.style.cssText = `
+                        color: #ff6b9d;
+                        text-align: center;
+                        font-size: 13px;
+                        margin-top: 10px;
+                        animation: fadeIn 0.3s ease;
+                    `;
+                    errorDiv.textContent = '❌ 保存失败，请确保服务器已启动！';
+                    const actions = overlay.querySelector('.edit-actions');
+                    actions.parentNode.insertBefore(errorDiv, actions);
+                    setTimeout(() => {
+                        if (errorDiv.parentNode) errorDiv.remove();
+                    }, 3000);
+                }
+            });
+
+            textarea.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    overlay.querySelector('#saveCustomBtn').click();
+                }
+            });
+        });
+
+        // ===================================================
+        // 11. 成功提示
+        // ===================================================
+        function showSuccessToast(icon, msg, sub) {
+            const toast = document.createElement('div');
+            toast.className = 'success-toast';
+            toast.innerHTML = `
+                <div class="icon">${icon}</div>
+                <div class="msg">${msg}</div>
+                <div class="sub">${sub}</div>
+            `;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.6s ease';
+                setTimeout(() => {
+                    if (toast.parentNode) document.body.removeChild(toast);
+                }, 600);
+            }, 2000);
+        }
+
+        // ===================================================
+        // 12. 照片管理功能
+        // ===================================================
+
+        // 管理照片（相册风格 + 分类）
+        window.showManageModal = function() {
+            fetch(`${API_BASE_URL}/api/photos/list`)
+                .then(res => res.json())
+                .then(result => {
+                    if (!result.success) {
+                        alert('获取照片列表失败');
+                        return;
+                    }
+
+                    const photos = result.data.photos || [];
+                    
+                    fetch(`${API_BASE_URL}/api/photos/categories`)
+                        .then(res => res.json())
+                        .then(catResult => {
+                            const categories = catResult.success ? catResult.data : ['默认'];
+                            renderManageModal(photos, categories);
+                        })
+                        .catch(() => {
+                            renderManageModal(photos, ['默认']);
+                        });
+                })
+                .catch(err => {
+                    alert('获取照片列表失败，请确保服务器已启动');
+                    console.error(err);
+                });
+        };
+
+        function renderManageModal(photos, categories) {
+            let currentCategory = '全部';
+            
+            function getFilteredPhotos(cat) {
+                if (cat === '全部') return photos;
+                return photos.filter(p => (p.category || '默认') === cat);
+            }
+            
+            function render(cat) {
+                currentCategory = cat;
+                const filtered = getFilteredPhotos(cat);
+                const overlay = document.createElement('div');
+                overlay.id = 'manageOverlay';
+                overlay.style.cssText = `
+                    position:fixed;top:0;left:0;width:100%;height:100%;
+                    background:rgba(0,0,0,0.92);backdrop-filter:blur(15px);
+                    z-index:99999;
+                    animation:fadeIn 0.3s ease;
+                    padding:20px;
+                    box-sizing:border-box;
+                    overflow-y:auto;
+                `;
+
+                let categoryBtns = categories.map(c => `
+                    <button onclick="window.switchCategory('${c}')" style="padding:6px 16px;border-radius:20px;border:1px solid ${currentCategory === c ? 'rgba(255,107,157,0.3)' : 'rgba(255,255,255,0.05)'};background:${currentCategory === c ? 'rgba(255,107,157,0.15)' : 'rgba(255,255,255,0.03)'};color:${currentCategory === c ? '#ffb6c1' : 'rgba(255,255,255,0.3)'};cursor:pointer;font-size:13px;transition:0.3s;">${c}</button>
+                `).join('');
+
+                let photoGrid = filtered.map(p => `
+                    <div style="background:rgba(26,11,26,0.6);border-radius:16px;overflow:hidden;border:1px solid rgba(255,182,193,0.08);transition:0.3s;position:relative;" 
+                         onmouseover="this.style.borderColor='rgba(255,107,157,0.3)';this.style.transform='translateY(-4px)'" 
+                         onmouseout="this.style.borderColor='rgba(255,182,193,0.08)';this.style.transform='translateY(0)'">
+                        <img src="/photos/${p.id}.jpg" style="width:100%;height:180px;object-fit:cover;display:block;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%232d1b2d%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23ffb6c1%22 font-size=%2230%22%3E📸%3C/text%3E%3C/svg%3E'">
+                        <div style="padding:12px 14px;">
+                            <div style="color:#f0e0e6;font-size:14px;font-weight:500;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.note || '无备注'}</div>
+                            <div style="color:rgba(255,255,255,0.2);font-size:11px;margin-bottom:6px;">📁 ${p.category || '默认'} ${p.taken_date ? '📅 ' + p.taken_date : ''}</div>
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                                <button onclick="window.editPhotoFull(${p.id}, '${(p.note || '').replace(/'/g, "\\'")}', '${(p.category || '默认').replace(/'/g, "\\'")}', '${p.taken_date || ''}')" style="padding:4px 12px;border-radius:12px;border:1px solid rgba(255,107,157,0.2);background:rgba(255,107,157,0.05);color:#ffb6c1;cursor:pointer;font-size:11px;transition:0.3s;" onmouseover="this.style.background='rgba(255,107,157,0.15)'" onmouseout="this.style.background='rgba(255,107,157,0.05)'">✏️ 编辑</button>
+                                <button onclick="window.deletePhoto(${p.id})" style="padding:4px 12px;border-radius:12px;border:1px solid rgba(255,0,0,0.15);background:rgba(255,0,0,0.05);color:#ff6b6b;cursor:pointer;font-size:11px;transition:0.3s;" onmouseover="this.style.background='rgba(255,0,0,0.15)'" onmouseout="this.style.background='rgba(255,0,0,0.05)'">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                overlay.innerHTML = `
+                    <div style="max-width:1000px;margin:0 auto;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0 15px 0;flex-wrap:wrap;gap:15px;">
+                            <div>
+                                <h2 style="color:#ffb6c1;font-size:24px;font-weight:300;letter-spacing:3px;margin:0;">🖼️ 相册管理</h2>
+                                <span style="color:rgba(255,255,255,0.2);font-size:13px;">共 ${photos.length} 张照片  ·  当前 ${filtered.length} 张</span>
+                            </div>
+                            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                                <button onclick="window.showUploadModal()" style="padding:8px 20px;border-radius:20px;border:1px solid rgba(255,107,157,0.2);background:rgba(255,107,157,0.1);color:#ffb6c1;cursor:pointer;font-size:13px;transition:0.3s;" onmouseover="this.style.background='rgba(255,107,157,0.2)'" onmouseout="this.style.background='rgba(255,107,157,0.1)'">📸 上传</button>
+                                <button id="closeManageBtn2" style="padding:8px 24px;border-radius:20px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.3);cursor:pointer;font-size:13px;transition:0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">✕ 关闭</button>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <button onclick="window.switchCategory('全部')" style="padding:6px 18px;border-radius:20px;border:1px solid ${currentCategory === '全部' ? 'rgba(255,107,157,0.3)' : 'rgba(255,255,255,0.05)'};background:${currentCategory === '全部' ? 'rgba(255,107,157,0.15)' : 'rgba(255,255,255,0.03)'};color:${currentCategory === '全部' ? '#ffb6c1' : 'rgba(255,255,255,0.3)'};cursor:pointer;font-size:13px;transition:0.3s;">📂 全部</button>
+                            ${categoryBtns}
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;">
+                            ${photoGrid || '<div style="text-align:center;color:rgba(255,255,255,0.2);padding:60px 0;grid-column:1/-1;">📸 这个分类还没有照片</div>'}
+                        </div>
+                    </div>
+                `;
+
+                const oldOverlay = document.getElementById('manageOverlay');
+                if (oldOverlay) {
+                    document.body.removeChild(oldOverlay);
+                }
+                document.body.appendChild(overlay);
+
+                document.getElementById('closeManageBtn2').addEventListener('click', function() {
+                    document.body.removeChild(overlay);
+                });
+
+                overlay.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        document.body.removeChild(this);
+                    }
+                });
+            }
+
+            window.switchCategory = function(cat) {
+                render(cat);
+            };
+
+            render('全部');
+        }
+
+        // 编辑照片（完整版）
+        window.editPhotoFull = function(id, currentNote, currentCategory, currentDate) {
+            fetch(`${API_BASE_URL}/api/photos/categories`)
+                .then(res => res.json())
+                .then(catResult => {
+                    const categories = catResult.success ? catResult.data : ['默认'];
+                    showEditDialog(id, currentNote, currentCategory, currentDate, categories);
+                })
+                .catch(() => {
+                    showEditDialog(id, currentNote, currentCategory, currentDate, ['默认']);
+                });
+        };
+
+        function showEditDialog(id, currentNote, currentCategory, currentDate, categories) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position:fixed;top:0;left:0;width:100%;height:100%;
+                background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);
+                z-index:999999;display:flex;justify-content:center;align-items:center;
+                animation:fadeIn 0.3s ease;
+                padding:20px;
+            `;
+            
+            let categoryOptions = categories.map(c => 
+                `<option value="${c}" ${c === currentCategory ? 'selected' : ''}>${c}</option>`
+            ).join('');
+            
+            overlay.innerHTML = `
+                <div style="background:linear-gradient(145deg,#1a0b1a,#2d1b2d);border-radius:30px;padding:35px;max-width:450px;width:100%;border:1px solid rgba(255,182,193,0.15);box-shadow:0 30px 80px rgba(0,0,0,0.5);">
+                    <h2 style="color:#ffb6c1;text-align:center;font-size:20px;font-weight:300;letter-spacing:3px;margin-bottom:20px;">✏️ 编辑照片 #${id}</h2>
+                    
+                    <div style="margin-bottom:15px;">
+                        <label style="color:rgba(255,255,255,0.4);font-size:13px;letter-spacing:2px;display:block;margin-bottom:6px;">💭 备注</label>
+                        <input id="editNote" value="${(currentNote || '').replace(/"/g, '&quot;')}" style="width:100%;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,182,193,0.15);background:rgba(0,0,0,0.3);color:#f0e0e6;font-size:14px;outline:none;box-sizing:border-box;">
+                    </div>
+                    
+                    <div style="margin-bottom:15px;">
+                        <label style="color:rgba(255,255,255,0.4);font-size:13px;letter-spacing:2px;display:block;margin-bottom:6px;">📁 分类</label>
+                        <div style="display:flex;gap:8px;">
+                            <select id="editCategorySelect" style="flex:1;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,182,193,0.15);background:rgba(0,0,0,0.3);color:#f0e0e6;font-size:14px;outline:none;box-sizing:border-box;font-family:inherit;">
+                                ${categoryOptions}
+                                <option value="__new__">➕ 新建分类...</option>
+                            </select>
+                        </div>
+                        <div id="newCategoryInputWrap" style="display:none;margin-top:8px;">
+                            <input id="newCategoryInput" placeholder="输入新分类名称" style="width:100%;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,107,157,0.3);background:rgba(0,0,0,0.3);color:#f0e0e6;font-size:14px;outline:none;box-sizing:border-box;">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom:20px;">
+                        <label style="color:rgba(255,255,255,0.4);font-size:13px;letter-spacing:2px;display:block;margin-bottom:6px;">📅 拍摄日期</label>
+                        <input id="editDate" type="date" value="${currentDate || ''}" style="width:100%;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,182,193,0.15);background:rgba(0,0,0,0.3);color:#f0e0e6;font-size:14px;outline:none;box-sizing:border-box;color-scheme:dark;">
+                    </div>
+                    
+                    <div style="display:flex;gap:12px;justify-content:center;">
+                        <button id="cancelEditBtn" style="padding:10px 30px;border-radius:50px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.4);cursor:pointer;font-size:14px;">取消</button>
+                        <button id="saveEditBtn" style="padding:10px 40px;border-radius:50px;border:none;background:linear-gradient(135deg,#ff6b9d,#ff1493);color:white;cursor:pointer;font-size:14px;font-weight:500;box-shadow:0 8px 25px rgba(255,20,147,0.2);">💕 保存</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            
+            const categorySelect = document.getElementById('editCategorySelect');
+            const newCategoryWrap = document.getElementById('newCategoryInputWrap');
+            const newCategoryInput = document.getElementById('newCategoryInput');
+            
+            categorySelect.addEventListener('change', function() {
+                if (this.value === '__new__') {
+                    newCategoryWrap.style.display = 'block';
+                    newCategoryInput.focus();
+                } else {
+                    newCategoryWrap.style.display = 'none';
+                }
+            });
+            
+            document.getElementById('cancelEditBtn').addEventListener('click', function() {
+                document.body.removeChild(overlay);
+            });
+            
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) document.body.removeChild(overlay);
+            });
+            
+            document.getElementById('saveEditBtn').addEventListener('click', function() {
+                const note = document.getElementById('editNote').value.trim();
+                let category = categorySelect.value;
+                const taken_date = document.getElementById('editDate').value || null;
+                
+                if (category === '__new__') {
+                    const newCat = newCategoryInput.value.trim();
+                    if (!newCat) {
+                        alert('请输入分类名称 📁');
+                        return;
+                    }
+                    category = newCat;
+                }
+                
+                if (!note) {
+                    alert('请输入备注内容 💕');
+                    return;
+                }
+                
+                this.textContent = '保存中...';
+                this.disabled = true;
+                
+                fetch(`${API_BASE_URL}/api/photos/${id}`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ note, category, taken_date })
+                })
+                .then(async res => {
+                    if (!res.ok) {
+                        const text = await res.text();
+                        throw new Error(`HTTP ${res.status}: ${text}`);
+                    }
+                    return res.json();
+                })
+                .then(result => {
+                    if (result.success) {
+                        alert('✅ 更新成功！');
+                        document.body.removeChild(overlay);
+                        const oldOverlay = document.getElementById('manageOverlay');
+                        if (oldOverlay) document.body.removeChild(oldOverlay);
+                        window.showManageModal();
+                        refreshPhotoData();
+                        showSuccessToast('✅', '分类已更新！', '照片已移动到 "' + category + '" 分类');
+                    } else {
+                        alert('❌ 更新失败：' + (result.message || '未知错误'));
+                        this.textContent = '💕 保存';
+                        this.disabled = false;
+                    }
+                })
+                .catch(err => {
+                    console.error('保存失败:', err);
+                    alert('❌ 网络错误，请确保服务器已启动\n\n错误信息: ' + err.message);
+                    this.textContent = '💕 保存';
+                    this.disabled = false;
+                });
+            });
+        }
+
+        // 批量上传照片
+        window.showUploadModal = function() {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position:fixed;top:0;left:0;width:100%;height:100%;
+                background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);
+                z-index:99999;display:flex;justify-content:center;align-items:center;
+                animation:fadeIn 0.3s ease;
+                padding:20px;
+                box-sizing:border-box;
+                overflow-y:auto;
+            `;
+
+            overlay.innerHTML = `
+                <div style="background:linear-gradient(145deg,#1a0b1a,#2d1b2d);border-radius:30px;padding:35px;max-width:600px;width:100%;border:1px solid rgba(255,182,193,0.15);box-shadow:0 30px 80px rgba(0,0,0,0.5);max-height:90vh;overflow-y:auto;">
+                    <h2 style="color:#ffb6c1;text-align:center;font-size:22px;font-weight:300;letter-spacing:3px;margin-bottom:10px;">📸 批量上传照片</h2>
+                    
+                    <div style="text-align:center;color:rgba(255,255,255,0.15);font-size:12px;margin-bottom:15px;letter-spacing:1px;">
+                        支持 Ctrl+多选 · 每张照片可单独备注
+                    </div>
+
+                    <div style="border:2px dashed rgba(255,182,193,0.2);border-radius:20px;padding:25px;text-align:center;cursor:pointer;transition:0.3s;margin-bottom:15px;" 
+                         onclick="document.getElementById('fileInput').click()"
+                         onmouseover="this.style.borderColor='#ff6b9d'"
+                         onmouseout="this.style.borderColor='rgba(255,182,193,0.2)'">
+                        <div style="font-size:40px;margin-bottom:5px;">🖼️</div>
+                        <div style="color:rgba(255,255,255,0.3);font-size:13px;">点击选择多张照片</div>
+                        <input type="file" id="fileInput" accept="image/*" multiple style="display:none;" onchange="window.previewWithNotes(this)">
+                    </div>
+
+                    <div id="photoNoteList" style="max-height:300px;overflow-y:auto;margin-bottom:15px;"></div>
+
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px;align-items:center;">
+                        <select id="batchCategorySelect" style="flex:1;min-width:120px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,182,193,0.15);background:rgba(0,0,0,0.3);color:#f0e0e6;font-size:14px;outline:none;box-sizing:border-box;font-family:inherit;">
+                            <option value="默认">📁 默认</option>
+                            <option value="__new__">➕ 新建分类...</option>
+                        </select>
+                        <div id="batchNewCategoryWrap" style="display:none;flex:1;min-width:120px;">
+                            <input id="batchNewCategory" placeholder="输入新分类名称" style="width:100%;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,107,157,0.3);background:rgba(0,0,0,0.3);color:#f0e0e6;font-size:14px;outline:none;box-sizing:border-box;">
+                        </div>
+                        <input type="date" id="batchDate" style="padding:10px 14px;border-radius:12px;border:1px solid rgba(255,182,193,0.15);background:rgba(0,0,0,0.3);color:#f0e0e6;font-size:14px;outline:none;box-sizing:border-box;color-scheme:dark;">
+                    </div>
+
+                    <div style="margin-bottom:15px;">
+                        <label style="color:rgba(255,255,255,0.3);font-size:12px;letter-spacing:1px;">💭 统一备注（为空则使用单独备注）</label>
+                        <input id="batchNote" placeholder="所有照片使用同一备注..." style="width:100%;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,182,193,0.15);background:rgba(0,0,0,0.3);color:#f0e0e6;font-size:14px;outline:none;box-sizing:border-box;">
+                    </div>
+
+                    <div id="uploadProgress" style="display:none;margin-bottom:15px;">
+                        <div style="background:rgba(255,255,255,0.05);border-radius:10px;height:6px;overflow:hidden;">
+                            <div id="progressBar" style="background:linear-gradient(90deg,#ff6b9d,#ff1493);height:100%;width:0%;transition:width 0.3s;"></div>
+                        </div>
+                        <div style="color:rgba(255,255,255,0.2);font-size:12px;text-align:center;margin-top:5px;" id="progressText">0 / 0</div>
+                    </div>
+
+                    <div style="display:flex;gap:12px;justify-content:center;">
+                        <button id="cancelUploadBtn" style="padding:10px 30px;border-radius:50px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.4);cursor:pointer;font-size:14px;">取消</button>
+                        <button id="uploadBtn" style="padding:10px 40px;border-radius:50px;border:none;background:linear-gradient(135deg,#ff6b9d,#ff1493);color:white;cursor:pointer;font-size:14px;font-weight:500;box-shadow:0 8px 25px rgba(255,20,147,0.2);">💕 批量上传</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(overlay);
+
+            const batchCategorySelect = document.getElementById('batchCategorySelect');
+            const batchNewCategoryWrap = document.getElementById('batchNewCategoryWrap');
+            const batchNewCategory = document.getElementById('batchNewCategory');
+
+            fetch(`${API_BASE_URL}/api/photos/categories`)
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        const categories = result.data;
+                        while (batchCategorySelect.options.length > 2) {
+                            batchCategorySelect.remove(2);
+                        }
+                        categories.forEach(cat => {
+                            if (cat !== '默认') {
+                                const opt = document.createElement('option');
+                                opt.value = cat;
+                                opt.textContent = cat;
+                                batchCategorySelect.insertBefore(opt, batchCategorySelect.querySelector('option[value="__new__"]'));
+                            }
+                        });
+                    }
+                })
+                .catch(() => {});
+
+            batchCategorySelect.addEventListener('change', function() {
+                if (this.value === '__new__') {
+                    batchNewCategoryWrap.style.display = 'block';
+                    batchNewCategory.focus();
+                } else {
+                    batchNewCategoryWrap.style.display = 'none';
+                }
+            });
+
+            let fileNotes = [];
+
+            window.previewWithNotes = function(input) {
+                const container = document.getElementById('photoNoteList');
+                container.innerHTML = '';
+                fileNotes = [];
+
+                if (input.files && input.files.length > 0) {
+                    for (let i = 0; i < input.files.length; i++) {
+                        const file = input.files[i];
+                        fileNotes.push({ file, note: '' });
+                        
+                        const div = document.createElement('div');
+                        div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:12px;margin-bottom:6px;border:1px solid rgba(255,255,255,0.03);';
+                        div.innerHTML = `
+                            <span style="font-size:28px;flex-shrink:0;">🖼️</span>
+                            <span style="color:rgba(255,255,255,0.3);font-size:12px;min-width:30px;">#${i+1}</span>
+                            <span style="color:#f0e0e6;font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${file.name}</span>
+                            <input class="single-note" data-index="${i}" placeholder="单独备注..." style="flex:1;min-width:80px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,182,193,0.1);background:rgba(0,0,0,0.3);color:#f0e0e6;font-size:12px;outline:none;box-sizing:border-box;">
+                        `;
+                        container.appendChild(div);
+                        
+                        const noteInput = div.querySelector('.single-note');
+                        noteInput.addEventListener('input', function() {
+                            fileNotes[this.dataset.index].note = this.value;
+                        });
+                    }
+                }
+            };
+
+            document.getElementById('cancelUploadBtn').addEventListener('click', function() {
+                document.body.removeChild(overlay);
+            });
+
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) document.body.removeChild(overlay);
+            });
+
+            document.getElementById('uploadBtn').addEventListener('click', async function() {
+                const files = fileNotes.map(f => f.file);
+                if (files.length === 0) {
+                    alert('请先选择照片 📸');
+                    return;
+                }
+
+                let category = batchCategorySelect.value;
+                if (category === '__new__') {
+                    const newCat = batchNewCategory.value.trim();
+                    if (!newCat) {
+                        alert('请输入新分类名称 📁');
+                        return;
+                    }
+                    category = newCat;
+                }
+
+                const batchNote = document.getElementById('batchNote').value.trim();
+                const batchDate = document.getElementById('batchDate').value || null;
+                
+                const progressDiv = document.getElementById('uploadProgress');
+                const progressBar = document.getElementById('progressBar');
+                const progressText = document.getElementById('progressText');
+                
+                progressDiv.style.display = 'block';
+                this.disabled = true;
+                this.textContent = '上传中...';
+
+                let successCount = 0;
+                let failCount = 0;
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    progressBar.style.width = `${((i) / files.length) * 100}%`;
+                    progressText.textContent = `${i} / ${files.length}`;
+
+                    try {
+                        const base64 = await new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.onload = (e) => resolve(e.target.result);
+                            reader.onerror = reject;
+                            reader.readAsDataURL(file);
+                        });
+
+                        const singleNote = fileNotes[i]?.note || '';
+                        const finalNote = singleNote || batchNote || '💕 新照片';
+
+                        const response = await fetch(`${API_BASE_URL}/api/photos/upload`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                file: base64, 
+                                note: finalNote,
+                                category: category,
+                                taken_date: batchDate
+                            })
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                            successCount++;
+                        } else {
+                            failCount++;
+                        }
+                    } catch (error) {
+                        failCount++;
+                        console.error('上传失败:', error);
+                    }
+                }
+
+                progressBar.style.width = '100%';
+                progressText.textContent = `${files.length} / ${files.length}`;
+
+                setTimeout(() => {
+                    alert(`✅ 上传完成！\n成功：${successCount} 张\n失败：${failCount} 张`);
+                    document.body.removeChild(overlay);
+                    refreshPhotoData();
+                    window.showManageModal();
+                }, 500);
+            });
+        };
+
+        // 删除照片
+        window.deletePhoto = async function(id) {
+            if (!confirm(`确定要删除照片 #${id} 吗？此操作不可恢复 ❌`)) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/photos/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${text}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('🗑️ 照片已删除');
+                    const oldOverlay = document.getElementById('manageOverlay');
+                    if (oldOverlay) document.body.removeChild(oldOverlay);
+                    window.showManageModal();
+                    refreshPhotoData();
+                } else {
+                    alert('删除失败：' + (result.message || '未知错误'));
+                }
+            } catch (error) {
+                alert('删除失败，请确保服务器已启动\n\n错误信息: ' + error.message);
+                console.error(error);
+            }
+        };
+
+        // ===================================================
+        // 13. 快捷键
+        // ===================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'r' || e.key === 'R') {
+                camera.position.set(0, 1, 8);
+                controls.target.set(0, 0, 0);
+                controls.update();
+            }
+            if (e.key === ' ') {
+                e.preventDefault();
+                controls.autoRotate = !controls.autoRotate;
+                console.log(controls.autoRotate ? '🔄 自动旋转开启' : '⏸️ 自动旋转暂停');
+            }
+        });
+
+        console.log('💕 星空展台已启动！');
+        console.log('📸 共 ' + photosData.length + ' 张照片');
+        console.log('🌐 API地址: ' + API_BASE_URL);
+        console.log('⌨️ 快捷键: [R]重置视角 [Space]暂停/恢复旋转');
+    </script>
+</body>
+</html>

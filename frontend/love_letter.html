@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💌 我们的情书</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a0b1a, #2d1b2d);
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            padding: 20px;
+            color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* ===== 顶部导航 ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 182, 193, 0.1);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .header h1 {
+            color: #ffb6c1;
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+        
+        .header h1 small {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ffb6c1;
+            background: rgba(255, 107, 157, 0.1);
+            border-color: rgba(255, 107, 157, 0.2);
+        }
+        
+        /* ===== 添加按钮 ===== */
+        .add-btn {
+            background: linear-gradient(135deg, #ff6b9d, #ff1493);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 30px rgba(255, 20, 147, 0.25);
+            letter-spacing: 2px;
+        }
+        
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(255, 20, 147, 0.35);
+        }
+        
+        /* ===== 统计 ===== */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-item {
+            background: rgba(26, 11, 26, 0.5);
+            border-radius: 16px;
+            padding: 15px 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 182, 193, 0.05);
+        }
+        
+        .summary-item .num {
+            font-size: 28px;
+            color: #ffb6c1;
+            font-weight: 300;
+        }
+        
+        .summary-item .label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        
+        /* ===== 搜索栏 ===== */
+        .search-bar {
+            background: rgba(26, 11, 26, 0.5);
+            border-radius: 16px;
+            padding: 18px 22px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 182, 193, 0.05);
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .search-row:first-child {
+            margin-bottom: 10px;
+        }
+        
+        .search-input-wrap {
+            flex: 1;
+            min-width: 140px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 182, 193, 0.08);
+            transition: 0.3s;
+        }
+        
+        .search-input-wrap:focus-within {
+            border-color: rgba(255, 107, 157, 0.3);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.05);
+        }
+        
+        .search-input-wrap .search-icon {
+            padding: 0 8px 0 14px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .search-input-wrap input,
+        .search-input-wrap select {
+            flex: 1;
+            padding: 10px 14px 10px 0;
+            background: transparent;
+            border: none;
+            color: #f0e0e6;
+            font-size: 14px;
+            outline: none;
+            font-family: inherit;
+            min-width: 60px;
+        }
+        
+        .search-input-wrap select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.3)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+        
+        .search-input-wrap select option {
+            background: #1a0b1a;
+            color: #f0e0e6;
+        }
+        
+        .search-input-wrap input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .search-clear-btn {
+            padding: 8px 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.3s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        
+        .search-clear-btn:hover {
+            background: rgba(255, 107, 157, 0.1);
+            color: #ffb6c1;
+            border-color: rgba(255, 107, 157, 0.2);
+        }
+        
+        .search-result-info {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 13px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            margin-top: 10px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        
+        .search-result-info .highlight {
+            color: #ffb6c1;
+        }
+        
+        .highlight-text {
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+        
+        /* ===== 情书卡片 ===== */
+        .letter-card {
+            background: rgba(26, 11, 26, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 182, 193, 0.08);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        
+        .letter-card:hover {
+            background: rgba(26, 11, 26, 0.9);
+            border-color: rgba(255, 107, 157, 0.15);
+            transform: translateX(5px);
+        }
+        
+        .letter-card .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .letter-card .meta .title {
+            font-size: 20px;
+            color: #f0e0e6;
+            font-weight: 500;
+        }
+        
+        .letter-card .meta .info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.3);
+            flex-wrap: wrap;
+        }
+        
+        .letter-card .meta .info .mood {
+            font-size: 24px;
+        }
+        
+        .letter-card .preview {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 15px;
+            line-height: 1.8;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: pre-wrap;
+            max-height: 80px;
+        }
+        
+        .letter-card .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .letter-card .actions button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
+            padding: 6px 16px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.3s;
+        }
+        
+        .letter-card .actions .view-btn:hover {
+            background: rgba(255, 107, 157, 0.1);
+            color: #ffb6c1;
+            border-color: rgba(255, 107, 157, 0.2);
+        }
+        
+        .letter-card .actions .edit-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+            color: #ffd700;
+            border-color: rgba(255, 215, 0, 0.2);
+        }
+        
+        .letter-card .actions .delete-btn:hover {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff6b6b;
+            border-color: rgba(255, 0, 0, 0.2);
+        }
+        
+        /* ===== 情书详情弹窗（美化版） ===== */
+        .detail-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 99999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .detail-overlay.active {
+            display: flex;
+        }
+        
+        .detail-box {
+            background: linear-gradient(145deg, #1a0b1a, #2d1b2d);
+            border-radius: 30px;
+            padding: 30px 35px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 92vh;
+            border: 1px solid rgba(255, 182, 193, 0.15);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            animation: slideUp 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: background 0.3s ease;
+        }
+        
+        .detail-box .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 28px;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 10;
+        }
+        .detail-box .close-btn:hover {
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        /* 工具栏 */
+        .detail-toolbar {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 10px 0 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 15px;
+        }
+        
+        .detail-toolbar button {
+            padding: 4px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.3s;
+            font-family: inherit;
+            min-width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .detail-toolbar button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .detail-toolbar button[style*="background"] {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            padding: 0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail-toolbar button[style*="background"]:hover {
+            transform: scale(1.15);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .detail-toolbar .separator {
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 14px;
+            padding: 0 4px;
+        }
+        
+        .detail-toolbar #scrollBtn.active {
+            background: rgba(255, 107, 157, 0.2);
+            color: #ffb6c1;
+            border-color: rgba(255, 107, 157, 0.3);
+        }
+        
+        /* 内容区域 */
+        .detail-content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 5px;
+            max-height: 55vh;
+            scroll-behavior: smooth;
+        }
+        
+        .detail-content-wrapper::-webkit-scrollbar {
+            width: 4px;
+        }
+        .detail-content-wrapper::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
+        .detail-content-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255, 107, 157, 0.3);
+            border-radius: 10px;
+        }
+        
+        .detail-box .detail-title {
+            font-size: 28px;
+            color: #ffb6c1;
+            font-weight: 300;
+            margin-bottom: 12px;
+            letter-spacing: 3px;
+            transition: color 0.3s ease;
+            text-align: center;
+        }
+        
+        .detail-box .detail-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .detail-box .detail-content {
+            color: #f0e0e6;
+            font-size: 17px;
+            line-height: 2.2;
+            white-space: pre-wrap;
+            word-break: break-word;
+            padding: 25px 30px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            border-left: 4px solid #ff6b9d;
+            transition: all 0.3s ease;
+            font-family: "Microsoft YaHei", "PingFang SC", serif;
+            letter-spacing: 0.5px;
+        }
+        
+        /* 翻页导航 */
+        .detail-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .detail-nav button {
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+        
+        .detail-nav button:hover:not(:disabled) {
+            background: rgba(255, 107, 157, 0.1);
+            color: #ffb6c1;
+            border-color: rgba(255, 107, 157, 0.2);
+        }
+        
+        .detail-nav button:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+        
+        .detail-nav .letter-counter {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+        
+        /* ===== 弹窗（添加/编辑） ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-box {
+            background: linear-gradient(145deg, #1a0b1a, #2d1b2d);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 550px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 182, 193, 0.15);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s ease;
+        }
+        
+        .modal-box h2 {
+            color: #ffb6c1;
+            font-size: 22px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-group label {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 182, 193, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            color: #f0e0e6;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #ff6b9d;
+            box-shadow: 0 0 25px rgba(255, 107, 157, 0.05);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+            line-height: 1.8;
+        }
+        
+        .form-group select option {
+            background: #1a0b1a;
+            color: #f0e0e6;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+        
+        .modal-actions button {
+            padding: 12px 35px;
+            border-radius: 50px;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 2px;
+        }
+        
+        .modal-actions .btn-cancel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .modal-actions .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-actions .btn-save {
+            background: linear-gradient(135deg, #ff6b9d, #ff1493);
+            color: white;
+            box-shadow: 0 8px 30px rgba(255, 20, 147, 0.25);
+        }
+        
+        .modal-actions .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(255, 20, 147, 0.35);
+        }
+        
+        /* ===== 空状态 ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .empty-state .icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .empty-state .text {
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+        .empty-state .sub {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.1);
+            margin-top: 10px;
+        }
+        
+        /* ===== 动画 ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* ===== 响应式 ===== */
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .letter-card .meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .modal-box {
+                padding: 25px 20px;
+            }
+            
+            .detail-box {
+                padding: 20px 18px;
+                max-height: 95vh;
+            }
+            .detail-box .detail-title {
+                font-size: 22px;
+            }
+            .detail-box .detail-content {
+                font-size: 15px;
+                padding: 18px 16px;
+                line-height: 2;
+            }
+            .detail-toolbar {
+                gap: 4px;
+            }
+            .detail-toolbar button {
+                font-size: 11px;
+                padding: 3px 8px;
+                height: 24px;
+            }
+            .detail-nav {
+                justify-content: center;
+            }
+            
+            .search-bar {
+                padding: 15px;
+            }
+            .search-input-wrap {
+                min-width: 100px;
+            }
+            .search-row {
+                flex-direction: column;
+            }
+            .search-clear-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ===== 顶部导航 ===== -->
+        <div class="header">
+            <div>
+                <h1>💌 我们的情书 <small>· 写给你的一封信</small></h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">🏠 展台</a>
+                <a href="anniversary.html">📅 纪念日</a>
+                <a href="love_letter.html" class="active">💌 情书</a>
+            </div>
+        </div>
+        
+        <!-- ===== 统计 ===== -->
+        <div class="summary">
+            <div class="summary-item">
+                <div class="num" id="totalCount">0</div>
+                <div class="label">💌 情书</div>
+            </div>
+            <div class="summary-item">
+                <div class="num" id="recentCount">0</div>
+                <div class="label">📅 本月</div>
+            </div>
+        </div>
+        
+        <!-- ===== 搜索栏 ===== -->
+        <div class="search-bar" id="searchBar">
+            <div class="search-row">
+                <div class="search-input-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchTitle" placeholder="搜索标题或内容..." oninput="applySearch()">
+                </div>
+                <div class="search-input-wrap">
+                    <span class="search-icon">📍</span>
+                    <input type="text" id="searchLocation" placeholder="搜索地点..." oninput="applySearch()">
+                </div>
+            </div>
+            <div class="search-row">
+                <div class="search-input-wrap">
+                    <span class="search-icon">📅</span>
+                    <select id="searchMonth" onchange="applySearch()">
+                        <option value="">全部月份</option>
+                        <option value="1">1月</option>
+                        <option value="2">2月</option>
+                        <option value="3">3月</option>
+                        <option value="4">4月</option>
+                        <option value="5">5月</option>
+                        <option value="6">6月</option>
+                        <option value="7">7月</option>
+                        <option value="8">8月</option>
+                        <option value="9">9月</option>
+                        <option value="10">10月</option>
+                        <option value="11">11月</option>
+                        <option value="12">12月</option>
+                    </select>
+                </div>
+                <div class="search-input-wrap">
+                    <span class="search-icon">📅</span>
+                    <select id="searchYear" onchange="applySearch()">
+                        <option value="">全部年份</option>
+                    </select>
+                </div>
+                <button class="search-clear-btn" onclick="clearSearch()">✕ 清除筛选</button>
+            </div>
+            <div class="search-result-info" id="searchResultInfo"></div>
+        </div>
+        
+        <!-- ===== 添加按钮 ===== -->
+        <div style="margin-bottom: 20px; text-align: right;">
+            <button class="add-btn" onclick="showAddModal()">✍️ 写情书</button>
+        </div>
+        
+        <!-- ===== 情书列表 ===== -->
+        <div id="letterList"></div>
+        
+        <!-- ===== 空状态 ===== -->
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <div class="icon">💌</div>
+            <div class="text">还没有情书</div>
+            <div class="sub">点击右上角「写情书」，把想说的话都记录下来 💕</div>
+        </div>
+    </div>
+    
+    <!-- ===== 情书详情弹窗（美化版） ===== -->
+    <div class="detail-overlay" id="detailModal">
+        <div class="detail-box" id="detailBox">
+            <button class="close-btn" onclick="closeDetail()">✕</button>
+            
+            <!-- 工具栏 -->
+            <div class="detail-toolbar" id="detailToolbar">
+                <!-- 字体大小 -->
+                <button onclick="changeFontSize('+')" title="放大字体">🔍+</button>
+                <button onclick="changeFontSize('-')" title="缩小字体">🔍-</button>
+                <button onclick="changeFontSize('reset')" title="重置字体">↺</button>
+                
+                <span class="separator">|</span>
+                
+                <!-- 字体颜色 -->
+                <span style="color:rgba(255,255,255,0.2);font-size:11px;margin-right:2px;">文字</span>
+                <button onclick="changeTextColor('#ffb6c1')" style="background:#ffb6c1;" title="粉色"></button>
+                <button onclick="changeTextColor('#ffffff')" style="background:#ffffff;" title="白色"></button>
+                <button onclick="changeTextColor('#ffd700')" style="background:#ffd700;" title="金色"></button>
+                <button onclick="changeTextColor('#7dffb3')" style="background:#7dffb3;" title="薄荷"></button>
+                <button onclick="changeTextColor('#ff6b6b')" style="background:#ff6b6b;" title="红色"></button>
+                <button onclick="changeTextColor('#a29bfe')" style="background:#a29bfe;" title="紫色"></button>
+                
+                <span class="separator">|</span>
+                
+                <!-- 背景颜色 -->
+                <span style="color:rgba(255,255,255,0.2);font-size:11px;margin-right:2px;">背景</span>
+                <button onclick="changeBgColor('#1a0b1a')" style="background:#1a0b1a;border:1px solid rgba(255,255,255,0.15);" title="深色"></button>
+                <button onclick="changeBgColor('#2d1b2d')" style="background:#2d1b2d;border:1px solid rgba(255,255,255,0.15);" title="紫色"></button>
+                <button onclick="changeBgColor('#1a1a2e')" style="background:#1a1a2e;border:1px solid rgba(255,255,255,0.15);" title="深蓝"></button>
+                <button onclick="changeBgColor('#2d1f0a')" style="background:#2d1f0a;border:1px solid rgba(255,255,255,0.15);" title="暖色"></button>
+                <button onclick="changeBgColor('#0a1a1a')" style="background:#0a1a1a;border:1px solid rgba(255,255,255,0.15);" title="墨绿"></button>
+                <button onclick="changeBgColor('#ffffff')" style="background:#ffffff;border:1px solid rgba(255,255,255,0.15);" title="白色"></button>
+                
+                <span class="separator">|</span>
+                
+                <!-- 自动滚动 -->
+                <button onclick="toggleAutoScroll()" id="scrollBtn" title="自动滚动">▶ 自动</button>
+                
+                <!-- 速度控制 -->
+                <span class="separator">|</span>
+                <div id="speedControl" style="display:none;align-items:center;gap:6px;">
+                    <button onclick="changeScrollSpeed(3000)" style="padding:2px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.4);cursor:pointer;font-size:11px;font-family:inherit;">慢</button>
+                    <button onclick="changeScrollSpeed(2000)" style="padding:2px 8px;border-radius:8px;border:1px solid rgba(255,107,157,0.2);background:rgba(255,107,157,0.1);color:#ffb6c1;cursor:pointer;font-size:11px;font-family:inherit;">中</button>
+                    <button onclick="changeScrollSpeed(1000)" style="padding:2px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.4);cursor:pointer;font-size:11px;font-family:inherit;">快</button>
+                    <span id="speedLabel" style="color:rgba(255,255,255,0.2);font-size:11px;">速度: 2秒</span>
+                </div>
+            </div>
+            
+            <div class="detail-content-wrapper" id="detailContentWrapper">
+                <div class="detail-title" id="detailTitle">标题</div>
+                <div class="detail-meta" id="detailMeta">
+                    <span id="detailMood">😊</span>
+                    <span id="detailWeather">☀️</span>
+                    <span id="detailLocation">📍 地点</span>
+                    <span id="detailDate">📅 时间</span>
+                </div>
+                <div class="detail-content" id="detailContent">内容</div>
+            </div>
+            
+            <!-- 底部翻页 -->
+            <div class="detail-nav" id="detailNav">
+                <button onclick="prevLetter()" id="prevBtn">◀ 上一篇</button>
+                <span class="letter-counter" id="letterCounter">1 / 1</span>
+                <button onclick="nextLetter()" id="nextBtn">下一篇 ▶</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== 添加/编辑弹窗 ===== -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <h2 id="modalTitle">✍️ 写情书</h2>
+            
+            <input type="hidden" id="editId">
+            
+            <div class="form-group">
+                <label>📝 标题</label>
+                <input type="text" id="formTitle" placeholder="给这封信取个名字吧" maxlength="100">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>😊 心情</label>
+                    <select id="formMood">
+                        <option value="😊">😊 开心</option>
+                        <option value="🥰">🥰 幸福</option>
+                        <option value="😘">😘 爱慕</option>
+                        <option value="❤️">❤️ 心动</option>
+                        <option value="😢">😢 思念</option>
+                        <option value="🥺">🥺 感动</option>
+                        <option value="😄">😄 快乐</option>
+                        <option value="😌">😌 平静</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>🌤️ 天气</label>
+                    <select id="formWeather">
+                        <option value="☀️">☀️ 晴天</option>
+                        <option value="⛅">⛅ 多云</option>
+                        <option value="🌤️">🌤️ 阴天</option>
+                        <option value="🌧️">🌧️ 雨天</option>
+                        <option value="❄️">❄️ 雪天</option>
+                        <option value="🌅">🌅 日落</option>
+                        <option value="🌙">🌙 夜晚</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>📍 地点（可选）</label>
+                <input type="text" id="formLocation" placeholder="在哪里写的呢？">
+            </div>
+            
+            <div class="form-group">
+                <label>💕 内容</label>
+                <textarea id="formContent" placeholder="写下你想说的话..."></textarea>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">取消</button>
+                <button class="btn-save" onclick="saveLetter()">💕 保存</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:3000';
+        const user = JSON.parse(localStorage.getItem('love_user') || 'null');
+        
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+        
+        let editingId = null;
+        let currentLetters = [];
+        let currentIndex = 0;
+        let autoScrollInterval = null;
+        let isAutoScrolling = false;
+        
+        // =============================================
+        // 加载情书列表
+        // =============================================
+        async function loadLetters() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/letters?user_id=${user.id}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentLetters = result.data;
+                    initYearOptions();
+                    renderSearchResults(result.data);
+                    updateSummary(result.data);
+                }
+            } catch (error) {
+                console.error('加载情书失败:', error);
+                document.getElementById('letterList').innerHTML = `
+                    <div style="text-align:center;color:rgba(255,255,255,0.3);padding:40px;">
+                        ❌ 加载失败，请确保服务器已启动
+                    </div>
+                `;
+            }
+        }
+        
+        // =============================================
+        // 更新统计
+        // =============================================
+        function updateSummary(letters) {
+            document.getElementById('totalCount').textContent = letters.length;
+            
+            const now = new Date();
+            const thisMonth = now.getMonth();
+            const thisYear = now.getFullYear();
+            const recent = letters.filter(item => {
+                const d = new Date(item.created_at);
+                return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+            });
+            document.getElementById('recentCount').textContent = recent.length;
+        }
+        
+        // =============================================
+        // 初始化年份选项
+        // =============================================
+        function initYearOptions() {
+            const yearSelect = document.getElementById('searchYear');
+            yearSelect.innerHTML = '<option value="">全部年份</option>';
+            const currentYear = new Date().getFullYear();
+            for (let y = currentYear; y >= currentYear - 10; y--) {
+                const option = document.createElement('option');
+                option.value = y;
+                option.textContent = y + '年';
+                yearSelect.appendChild(option);
+            }
+        }
+        
+        // =============================================
+        // 搜索功能
+        // =============================================
+        function applySearch() {
+            const titleKeyword = document.getElementById('searchTitle').value.trim().toLowerCase();
+            const locationKeyword = document.getElementById('searchLocation').value.trim().toLowerCase();
+            const month = document.getElementById('searchMonth').value;
+            const year = document.getElementById('searchYear').value;
+            
+            let results = [...currentLetters];
+            let filters = [];
+            
+            // 标题/内容模糊搜索
+            if (titleKeyword) {
+                results = results.filter(item => 
+                    item.title.toLowerCase().includes(titleKeyword) ||
+                    item.content.toLowerCase().includes(titleKeyword)
+                );
+                filters.push(`"${titleKeyword}"`);
+            }
+            
+            // 地点搜索
+            if (locationKeyword) {
+                results = results.filter(item => 
+                    (item.location || '').toLowerCase().includes(locationKeyword)
+                );
+                filters.push(`📍 "${locationKeyword}"`);
+            }
+            
+            // 月份筛选
+            if (month) {
+                results = results.filter(item => {
+                    const d = new Date(item.created_at);
+                    return (d.getMonth() + 1) === parseInt(month);
+                });
+                filters.push(`${parseInt(month)}月`);
+            }
+            
+            // 年份筛选
+            if (year) {
+                results = results.filter(item => {
+                    const d = new Date(item.created_at);
+                    return d.getFullYear() === parseInt(year);
+                });
+                filters.push(`${year}年`);
+            }
+            
+            // 更新结果信息
+            const info = document.getElementById('searchResultInfo');
+            if (filters.length > 0) {
+                info.innerHTML = `📌 筛选：<span class="highlight">${filters.join(' · ')}</span>　共 <span class="highlight">${results.length}</span> 封情书`;
+            } else {
+                info.innerHTML = '';
+            }
+            
+            renderSearchResults(results);
+        }
+        
+        // =============================================
+        // 渲染搜索结果
+        // =============================================
+        function renderSearchResults(results) {
+            const container = document.getElementById('letterList');
+            const empty = document.getElementById('emptyState');
+            
+            if (results.length === 0) {
+                container.innerHTML = '';
+                empty.style.display = 'block';
+                empty.innerHTML = `
+                    <div class="icon">🔍</div>
+                    <div class="text">没有找到匹配的情书</div>
+                    <div class="sub">试试其他关键词吧 💕</div>
+                `;
+                return;
+            }
+            empty.style.display = 'none';
+            
+            const keyword = document.getElementById('searchTitle').value.trim();
+            
+            container.innerHTML = results.map(item => {
+                const date = new Date(item.created_at);
+                const dateStr = date.toLocaleDateString('zh-CN');
+                
+                const preview = item.content.length > 100 
+                    ? item.content.substring(0, 100) + '...' 
+                    : item.content;
+                
+                // 高亮匹配的标题
+                let titleHtml = item.title;
+                if (keyword) {
+                    const regex = new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                    titleHtml = item.title.replace(regex, '<span class="highlight-text">$1</span>');
+                }
+                
+                return `
+                    <div class="letter-card">
+                        <div class="meta">
+                            <div class="title">${titleHtml}</div>
+                            <div class="info">
+                                <span class="mood">${item.mood || '😊'}</span>
+                                <span>${item.weather || '☀️'}</span>
+                                <span>${dateStr}</span>
+                                ${item.location ? `<span>📍 ${item.location}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="preview">${preview}</div>
+                        <div class="actions">
+                            <button class="view-btn" onclick="showDetail(${item.id})">📖 阅读</button>
+                            <button class="edit-btn" onclick="showEditModal(${item.id})">✏️ 编辑</button>
+                            <button class="delete-btn" onclick="deleteLetter(${item.id})">🗑️ 删除</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // =============================================
+        // 清除搜索
+        // =============================================
+        function clearSearch() {
+            document.getElementById('searchTitle').value = '';
+            document.getElementById('searchLocation').value = '';
+            document.getElementById('searchMonth').value = '';
+            document.getElementById('searchYear').value = '';
+            document.getElementById('searchResultInfo').innerHTML = '';
+            renderSearchResults(currentLetters);
+        }
+        
+        // =============================================
+        // 显示情书详情（美化版）
+        // =============================================
+        async function showDetail(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/letters/${id}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentIndex = currentLetters.findIndex(item => item.id === id);
+                    if (currentIndex === -1) currentIndex = 0;
+                    
+                    showLetterDetail(result.data);
+                    document.getElementById('detailModal').classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    resetDetailStyles();
+                }
+            } catch (error) {
+                alert('加载失败');
+                console.error(error);
+            }
+        }
+        
+        function showLetterDetail(item) {
+            const date = new Date(item.created_at);
+            const dateStr = date.toLocaleDateString('zh-CN') + ' ' + date.toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'});
+            
+            document.getElementById('detailTitle').textContent = item.title;
+            document.getElementById('detailMood').textContent = item.mood || '😊';
+            document.getElementById('detailWeather').textContent = item.weather || '☀️';
+            document.getElementById('detailLocation').textContent = item.location ? '📍 ' + item.location : '📍 未知地点';
+            document.getElementById('detailDate').textContent = '📅 ' + dateStr;
+            document.getElementById('detailContent').textContent = item.content;
+            
+            document.getElementById('letterCounter').textContent = `${currentIndex + 1} / ${currentLetters.length}`;
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            document.getElementById('nextBtn').disabled = currentIndex === currentLetters.length - 1;
+            
+            document.getElementById('detailContentWrapper').scrollTop = 0;
+            
+            if (isAutoScrolling) {
+                clearInterval(autoScrollInterval);
+                isAutoScrolling = false;
+                document.getElementById('scrollBtn').textContent = '▶ 自动';
+                document.getElementById('scrollBtn').classList.remove('active');
+            }
+        }
+        
+        function resetDetailStyles() {
+            const content = document.getElementById('detailContent');
+            const title = document.getElementById('detailTitle');
+            const box = document.getElementById('detailBox');
+            
+            content.style.fontSize = '17px';
+            content.style.lineHeight = '2.2';
+            content.style.color = '#f0e0e6';
+            content.style.borderLeftColor = '#ff6b9d';
+            title.style.fontSize = '28px';
+            title.style.color = '#ffb6c1';
+            box.style.background = 'linear-gradient(145deg, #1a0b1a, #2d1b2d)';
+        }
+        
+        // =============================================
+        // 关闭详情
+        // =============================================
+        function closeDetail() {
+            document.getElementById('detailModal').classList.remove('active');
+            document.body.style.overflow = '';
+            if (isAutoScrolling) {
+                clearInterval(autoScrollInterval);
+                isAutoScrolling = false;
+                document.getElementById('scrollBtn').textContent = '▶ 自动';
+                document.getElementById('scrollBtn').classList.remove('active');
+            }
+        }
+        
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDetail();
+        });
+        
+        // =============================================
+        // 字体大小控制
+        // =============================================
+        function changeFontSize(action) {
+            const content = document.getElementById('detailContent');
+            const title = document.getElementById('detailTitle');
+            const currentSize = parseFloat(content.style.fontSize) || 17;
+            
+            let newSize;
+            if (action === '+') {
+                newSize = Math.min(currentSize + 2, 32);
+            } else if (action === '-') {
+                newSize = Math.max(currentSize - 2, 12);
+            } else {
+                newSize = 17;
+            }
+            
+            content.style.fontSize = newSize + 'px';
+            content.style.lineHeight = (newSize * 1.3) + 'px';
+            
+            const titleSize = parseFloat(title.style.fontSize) || 28;
+            if (action === '+') {
+                title.style.fontSize = Math.min(titleSize + 2, 40) + 'px';
+            } else if (action === '-') {
+                title.style.fontSize = Math.max(titleSize - 2, 18) + 'px';
+            } else {
+                title.style.fontSize = '28px';
+            }
+        }
+        
+        // =============================================
+        // 文字颜色控制
+        // =============================================
+        function changeTextColor(color) {
+            document.getElementById('detailContent').style.color = color;
+        }
+        
+        // =============================================
+        // 背景颜色控制
+        // =============================================
+        function changeBgColor(color) {
+            const box = document.getElementById('detailBox');
+            function adjustColor(hex, amount) {
+                let c = hex.replace('#', '');
+                if (c.length === 3) c = c.split('').map(s => s+s).join('');
+                let r = Math.max(0, Math.min(255, parseInt(c.substring(0,2), 16) + amount));
+                let g = Math.max(0, Math.min(255, parseInt(c.substring(2,4), 16) + amount));
+                let b = Math.max(0, Math.min(255, parseInt(c.substring(4,6), 16) + amount));
+                return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+            }
+            const lighter = adjustColor(color, 40);
+            box.style.background = `linear-gradient(145deg, ${color}, ${lighter})`;
+        }
+        
+        // =============================================
+        // 自动滚动（带速度调节）
+        // =============================================
+        let scrollSpeed = 2000; // 默认2秒
+
+        function toggleAutoScroll() {
+            const wrapper = document.getElementById('detailContentWrapper');
+            const btn = document.getElementById('scrollBtn');
+            const speedControl = document.getElementById('speedControl');
+            
+            if (isAutoScrolling) {
+                clearInterval(autoScrollInterval);
+                isAutoScrolling = false;
+                btn.textContent = '▶ 自动';
+                btn.classList.remove('active');
+                speedControl.style.display = 'none';
+            } else {
+                isAutoScrolling = true;
+                btn.textContent = '⏸ 暂停';
+                btn.classList.add('active');
+                speedControl.style.display = 'flex';
+                highlightCurrentSpeed();
+                startAutoScroll();
+            }
+        }
+
+        function startAutoScroll() {
+            const wrapper = document.getElementById('detailContentWrapper');
+            if (autoScrollInterval) clearInterval(autoScrollInterval);
+            
+            autoScrollInterval = setInterval(() => {
+                wrapper.scrollBy({ top: 20, behavior: 'smooth' });
+                if (wrapper.scrollTop + wrapper.clientHeight >= wrapper.scrollHeight - 10) {
+                    wrapper.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, scrollSpeed);
+        }
+
+        // 高亮当前速度按钮
+        function highlightCurrentSpeed() {
+            const speedBtns = document.querySelectorAll('.speed-btn');
+            speedBtns.forEach(btn => {
+                btn.style.background = 'rgba(255,255,255,0.03)';
+                btn.style.color = 'rgba(255,255,255,0.4)';
+                btn.style.borderColor = 'rgba(255,255,255,0.05)';
+            });
+            
+            let activeBtn = null;
+            if (scrollSpeed === 3000) activeBtn = document.querySelector('.speed-btn[data-speed="3000"]');
+            else if (scrollSpeed === 2000) activeBtn = document.querySelector('.speed-btn[data-speed="2000"]');
+            else if (scrollSpeed === 1000) activeBtn = document.querySelector('.speed-btn[data-speed="1000"]');
+            
+            if (activeBtn) {
+                activeBtn.style.background = 'rgba(255,107,157,0.15)';
+                activeBtn.style.color = '#ffb6c1';
+                activeBtn.style.borderColor = 'rgba(255,107,157,0.2)';
+            }
+        }
+
+        // 速度控制（带高亮切换）
+        function changeScrollSpeed(speed) {
+            scrollSpeed = speed;
+            document.getElementById('speedLabel').textContent = `速度: ${speed/1000}秒`;
+            
+            // 更新按钮高亮状态
+            const speedBtns = document.querySelectorAll('.speed-btn');
+            speedBtns.forEach(btn => {
+                btn.style.background = 'rgba(255,255,255,0.03)';
+                btn.style.color = 'rgba(255,255,255,0.4)';
+                btn.style.borderColor = 'rgba(255,255,255,0.05)';
+            });
+            
+            let activeBtn = null;
+            if (speed === 3000) activeBtn = document.querySelector('.speed-btn[data-speed="3000"]');
+            else if (speed === 2000) activeBtn = document.querySelector('.speed-btn[data-speed="2000"]');
+            else if (speed === 1000) activeBtn = document.querySelector('.speed-btn[data-speed="1000"]');
+            
+            if (activeBtn) {
+                activeBtn.style.background = 'rgba(255,107,157,0.15)';
+                activeBtn.style.color = '#ffb6c1';
+                activeBtn.style.borderColor = 'rgba(255,107,157,0.2)';
+            }
+            
+            if (isAutoScrolling) {
+                startAutoScroll();
+            }
+        }
+        
+        // =============================================
+        // 上一篇/下一篇
+        // =============================================
+        function prevLetter() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                fetchDetailAndShow(currentLetters[currentIndex].id);
+            }
+        }
+        
+        function nextLetter() {
+            if (currentIndex < currentLetters.length - 1) {
+                currentIndex++;
+                fetchDetailAndShow(currentLetters[currentIndex].id);
+            }
+        }
+        
+        async function fetchDetailAndShow(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/letters/${id}`);
+                const result = await response.json();
+                if (result.success) {
+                    showLetterDetail(result.data);
+                }
+            } catch (error) {
+                console.error('加载失败:', error);
+            }
+        }
+        
+        // =============================================
+        // 显示添加弹窗
+        // =============================================
+        function showAddModal() {
+            editingId = null;
+            document.getElementById('modalTitle').textContent = '✍️ 写情书';
+            document.getElementById('editId').value = '';
+            document.getElementById('formTitle').value = '';
+            document.getElementById('formContent').value = '';
+            document.getElementById('formMood').value = '😊';
+            document.getElementById('formWeather').value = '☀️';
+            document.getElementById('formLocation').value = '';
+            document.getElementById('modal').classList.add('active');
+        }
+        
+        // =============================================
+        // 显示编辑弹窗
+        // =============================================
+        async function showEditModal(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/letters/${id}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const item = result.data;
+                    editingId = id;
+                    document.getElementById('modalTitle').textContent = '✏️ 编辑情书';
+                    document.getElementById('editId').value = id;
+                    document.getElementById('formTitle').value = item.title;
+                    document.getElementById('formContent').value = item.content;
+                    document.getElementById('formMood').value = item.mood || '😊';
+                    document.getElementById('formWeather').value = item.weather || '☀️';
+                    document.getElementById('formLocation').value = item.location || '';
+                    document.getElementById('modal').classList.add('active');
+                }
+            } catch (error) {
+                alert('加载失败');
+                console.error(error);
+            }
+        }
+        
+        // =============================================
+        // 关闭弹窗
+        // =============================================
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+        
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        
+        // =============================================
+        // 保存情书
+        // =============================================
+        // 保存情书
+        async function saveLetter() {
+            const title = document.getElementById('formTitle').value.trim();
+            const content = document.getElementById('formContent').value.trim();
+            const mood = document.getElementById('formMood').value;
+            const weather = document.getElementById('formWeather').value;
+            const location = document.getElementById('formLocation').value.trim();
+            const editId = document.getElementById('editId').value;
+            
+            if (!title) {
+                alert('请写一个标题 💕');
+                return;
+            }
+            
+            if (!content) {
+                alert('请写下你想说的话 💕');
+                return;
+            }
+            
+            const data = {
+                user_id: user.id,
+                title,
+                content,
+                mood,
+                weather,
+                location
+            };
+            
+            try {
+                let url = `${API_BASE_URL}/api/letters`;
+                let method = 'POST';
+                
+                if (editId) {
+                    url += `/${editId}`;
+                    method = 'PUT';  // ← 确保这里是 PUT
+                }
+                
+                console.log('📤 发送请求:', method, url, data);
+                
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                console.log('📥 响应:', result);
+                
+                if (result.success) {
+                    alert(result.message);
+                    closeModal();
+                    loadLetters();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                alert('保存失败，请确保服务器已启动');
+                console.error(error);
+            }
+        }
+        
+        // =============================================
+        // 删除情书
+        // =============================================
+        async function deleteLetter(id) {
+            if (!confirm('确定要删除这封情书吗？💕')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/letters/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(result.message);
+                    loadLetters();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                alert('删除失败，请确保服务器已启动');
+                console.error(error);
+            }
+        }
+        
+        // =============================================
+        // 快捷键
+        // =============================================
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                if (document.getElementById('modal').classList.contains('active')) {
+                    saveLetter();
+                }
+            }
+            if (e.key === 'Escape') {
+                closeModal();
+                closeDetail();
+            }
+        });
+        
+        // =============================================
+        // 初始化
+        // =============================================
+        loadLetters();
+        
+        console.log('💌 情书页面已加载');
+    </script>
+</body>
+</html>

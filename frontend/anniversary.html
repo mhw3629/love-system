@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💕 我们的纪念日</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a0b1a, #2d1b2d);
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            padding: 20px;
+            color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* ===== 顶部导航 ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 182, 193, 0.1);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .header h1 {
+            color: #ffb6c1;
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+        
+        .header h1 small {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #ffb6c1;
+            background: rgba(255, 107, 157, 0.1);
+            border-color: rgba(255, 107, 157, 0.2);
+        }
+        
+        /* ===== 添加按钮 ===== */
+        .add-btn {
+            background: linear-gradient(135deg, #ff6b9d, #ff1493);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 30px rgba(255, 20, 147, 0.25);
+            letter-spacing: 2px;
+        }
+        
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(255, 20, 147, 0.35);
+        }
+        
+        /* ===== 统计摘要 ===== */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-item {
+            background: rgba(26, 11, 26, 0.5);
+            border-radius: 16px;
+            padding: 15px 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 182, 193, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .summary-item:hover {
+            border-color: rgba(255, 107, 157, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .summary-item.active {
+            border-color: #ff6b9d;
+            background: rgba(255, 107, 157, 0.1);
+            box-shadow: 0 0 30px rgba(255, 107, 157, 0.05);
+        }
+        
+        .summary-item.active .num {
+            color: #ff1493;
+        }
+        
+        .summary-item .num {
+            font-size: 28px;
+            color: #ffb6c1;
+            font-weight: 300;
+            transition: color 0.3s;
+        }
+        
+        .summary-item .label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        
+        /* ===== 筛选信息栏 ===== */
+        #filterInfo {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+            letter-spacing: 1px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        #filterInfo .clear-btn {
+            background: none;
+            border: none;
+            color: #ff6b9d;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 107, 157, 0.2);
+            transition: 0.3s;
+        }
+        
+        #filterInfo .clear-btn:hover {
+            background: rgba(255, 107, 157, 0.1);
+        }
+        
+        /* ===== 即将到来筛选器 ===== */
+        #upcomingFilter {
+            display: none;
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        #upcomingFilter .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        #upcomingFilter .filter-label {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+        
+        #upcomingFilter select {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 182, 193, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            color: #f0e0e6;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            font-family: inherit;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.3)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+        
+        #upcomingFilter select option {
+            background: #1a0b1a;
+            color: #f0e0e6;
+        }
+        
+        #upcomingFilter .upcoming-count {
+            color: #ffb6c1;
+            font-size: 14px;
+            margin-left: auto;
+        }
+        
+        /* ===== 纪念日卡片 ===== */
+        .anniversary-card {
+            background: rgba(26, 11, 26, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 182, 193, 0.08);
+            transition: 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .anniversary-card:hover {
+            background: rgba(26, 11, 26, 0.9);
+            border-color: rgba(255, 107, 157, 0.15);
+            transform: translateX(5px);
+        }
+        
+        .anniversary-card.important {
+            border-left: 4px solid #ff1493;
+        }
+        
+        .anniversary-card.today {
+            border-left: 4px solid #ffd700;
+            background: rgba(255, 215, 0, 0.05);
+        }
+        
+        .anniversary-card.upcoming {
+            border-left: 4px solid #ffd700;
+            background: rgba(255, 215, 0, 0.03);
+        }
+        
+        .anniversary-card.upcoming:hover {
+            background: rgba(255, 215, 0, 0.06);
+        }
+        
+        .card-left {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .card-left .category {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+        
+        .card-left .category .tag {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        
+        .card-left .category .tag-today {
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+        }
+        
+        .card-left .category .tag-upcoming {
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+        }
+        
+        .card-left .title {
+            font-size: 18px;
+            color: #f0e0e6;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .card-left .date {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .card-left .date .highlight {
+            color: rgba(255, 215, 0, 0.6);
+        }
+        
+        .card-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        
+        .card-right .days {
+            font-size: 28px;
+            font-weight: 300;
+            color: #ffb6c1;
+        }
+        
+        .card-right .days-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .card-right .next-days {
+            font-size: 12px;
+            color: rgba(255, 215, 0, 0.7);
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+        }
+        
+        .anniversary-card.today .card-right .days {
+            color: #ffd700;
+        }
+        
+        .anniversary-card.today .card-right .days-label {
+            color: #ffd700;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        
+        .card-actions button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
+            padding: 6px 14px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.3s;
+        }
+        
+        .card-actions .edit-btn:hover {
+            background: rgba(255, 107, 157, 0.1);
+            color: #ffb6c1;
+            border-color: rgba(255, 107, 157, 0.2);
+        }
+        
+        .card-actions .delete-btn:hover {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff6b6b;
+            border-color: rgba(255, 0, 0, 0.2);
+        }
+        
+        /* ===== 空状态 ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .empty-state .icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .empty-state .text {
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+        .empty-state .sub {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.1);
+            margin-top: 10px;
+        }
+        
+        /* ===== 弹窗 ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-box {
+            background: linear-gradient(145deg, #1a0b1a, #2d1b2d);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(255, 182, 193, 0.15);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-box h2 {
+            color: #ffb6c1;
+            font-size: 22px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-group label {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 182, 193, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            color: #f0e0e6;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #ff6b9d;
+            box-shadow: 0 0 25px rgba(255, 107, 157, 0.05);
+        }
+        
+        .form-group input[type="date"] {
+            color-scheme: dark;
+        }
+        
+        .form-group select option {
+            background: #1a0b1a;
+            color: #f0e0e6;
+        }
+        
+        .form-group .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #ff6b9d;
+            cursor: pointer;
+        }
+        
+        .form-group .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+        
+        .modal-actions button {
+            padding: 12px 35px;
+            border-radius: 50px;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 2px;
+        }
+        
+        .modal-actions .btn-cancel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .modal-actions .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-actions .btn-save {
+            background: linear-gradient(135deg, #ff6b9d, #ff1493);
+            color: white;
+            box-shadow: 0 8px 30px rgba(255, 20, 147, 0.25);
+        }
+        
+        .modal-actions .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(255, 20, 147, 0.35);
+        }
+        
+        /* ===== 动画 ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* ===== 响应式 ===== */
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .anniversary-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .card-right {
+                text-align: left;
+            }
+            
+            .card-actions {
+                margin-top: 10px;
+            }
+            
+            .modal-box {
+                padding: 25px 20px;
+            }
+            
+            #upcomingFilter .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            #upcomingFilter .upcoming-count {
+                margin-left: 0;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ===== 顶部导航 ===== -->
+        <div class="header">
+            <div>
+                <h1>💕 我们的纪念日 <small>· 每一刻都值得铭记</small></h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">🏠 展台</a>
+                <a href="anniversary.html" class="active">📅 纪念日</a>
+                <a href="love_letter.html">💌 情书</a>
+            </div>
+        </div>
+        
+        <!-- ===== 统计摘要 ===== -->
+        <div class="summary" id="summary">
+            <div class="summary-item active" data-filter="all" onclick="filterAnniversaries('all')">
+                <div class="num" id="totalCount">0</div>
+                <div class="label">📅 全部</div>
+            </div>
+            <div class="summary-item" data-filter="important" onclick="filterAnniversaries('important')">
+                <div class="num" id="importantCount">0</div>
+                <div class="label">⭐ 重要</div>
+            </div>
+            <div class="summary-item" data-filter="today" onclick="filterAnniversaries('today')">
+                <div class="num" id="todayCount">0</div>
+                <div class="label">🎉 今天</div>
+            </div>
+            <div class="summary-item" data-filter="upcoming" onclick="filterAnniversaries('upcoming')">
+                <div class="num" id="upcomingCount">0</div>
+                <div class="label">⏰ 即将到来</div>
+            </div>
+        </div>
+        
+        <!-- ===== 添加按钮 ===== -->
+        <div style="margin-bottom: 20px; text-align: right;">
+            <button class="add-btn" onclick="showAddModal()">➕ 添加纪念日</button>
+        </div>
+        
+        <!-- ===== 筛选信息栏 ===== -->
+        <div id="filterInfo" style="display:none;">
+            <span id="filterLabel">📌 当前筛选：全部</span>
+            <span id="filterCount" style="color:rgba(255,255,255,0.2);">共 0 项</span>
+            <button class="clear-btn" onclick="filterAnniversaries('all')">清除筛选 ✕</button>
+        </div>
+        
+        <!-- ===== 即将到来筛选器 ===== -->
+        <div id="upcomingFilter">
+            <div class="filter-row">
+                <span class="filter-label">📅 显示</span>
+                <select id="upcomingDays" onchange="applyUpcomingFilter()">
+                    <option value="7">7天内</option>
+                    <option value="15">15天内</option>
+                    <option value="30" selected>30天内</option>
+                    <option value="60">60天内</option>
+                    <option value="90">90天内</option>
+                    <option value="180">180天内</option>
+                    <option value="365">365天内</option>
+                    <option value="9999">全部未来</option>
+                </select>
+                <span class="filter-label">内的纪念日</span>
+                <span class="upcoming-count" id="upcomingCountLabel">共 0 项</span>
+            </div>
+        </div>
+        
+        <!-- ===== 纪念日列表 ===== -->
+        <div id="anniversaryList"></div>
+        
+        <!-- ===== 空状态 ===== -->
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <div class="icon">📅</div>
+            <div class="text" id="emptyText">还没有纪念日</div>
+            <div class="sub" id="emptySub">点击右上角「添加纪念日」记录你们的每一个重要时刻 💕</div>
+        </div>
+    </div>
+    
+    <!-- ===== 添加/编辑弹窗 ===== -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <h2 id="modalTitle">💕 添加纪念日</h2>
+            
+            <input type="hidden" id="editId">
+            
+            <div class="form-group">
+                <label>📝 标题</label>
+                <input type="text" id="formTitle" placeholder="例如：在一起的第一天" maxlength="100">
+            </div>
+            
+            <div class="form-group">
+                <label>📅 日期</label>
+                <input type="date" id="formDate">
+            </div>
+            
+            <div class="form-group">
+                <label>🏷️ 分类</label>
+                <select id="formCategory">
+                    <option value="恋爱纪念日">💕 恋爱纪念日</option>
+                    <option value="生日">🎂 生日</option>
+                    <option value="纪念日">💍 纪念日</option>
+                    <option value="旅行">✈️ 旅行</option>
+                    <option value="节日">🎄 节日</option>
+                    <option value="其他">💫 其他</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="formImportant">
+                    <label for="formImportant">⭐ 标记为重要</label>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">取消</button>
+                <button class="btn-save" onclick="saveAnniversary()">💕 保存</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:3000';
+        const user = JSON.parse(localStorage.getItem('love_user') || 'null');
+        
+        if (!user) {
+            window.location.href = 'login.html';
+        }
+        
+        let editingId = null;
+        let allAnniversaries = [];
+        let currentFilter = 'all';
+        
+        // =============================================
+        // 加载纪念日列表
+        // =============================================
+        async function loadAnniversaries() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/anniversaries?user_id=${user.id}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    allAnniversaries = result.data;
+                    updateSummary(allAnniversaries);
+                    filterAnniversaries(currentFilter);
+                }
+            } catch (error) {
+                console.error('加载纪念日失败:', error);
+                document.getElementById('anniversaryList').innerHTML = `
+                    <div style="text-align:center;color:rgba(255,255,255,0.3);padding:40px;">
+                        ❌ 加载失败，请确保服务器已启动
+                    </div>
+                `;
+            }
+        }
+        
+        // =============================================
+        // 筛选功能
+        // =============================================
+        function filterAnniversaries(filter) {
+            currentFilter = filter;
+            
+            document.querySelectorAll('.summary-item').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelector(`.summary-item[data-filter="${filter}"]`)?.classList.add('active');
+            
+            // 显示/隐藏日期范围筛选
+            const upcomingFilter = document.getElementById('upcomingFilter');
+            if (filter === 'upcoming') {
+                upcomingFilter.style.display = 'block';
+                applyUpcomingFilter();
+            } else {
+                upcomingFilter.style.display = 'none';
+            }
+            
+            let filtered = [...allAnniversaries];
+            let filterLabel = '全部';
+            
+            switch(filter) {
+                case 'important':
+                    filtered = filtered.filter(item => item.is_important);
+                    filterLabel = '⭐ 重要';
+                    break;
+                case 'today':
+                    filtered = filtered.filter(item => item.is_today);
+                    filterLabel = '🎉 今天';
+                    break;
+                case 'upcoming':
+                    filtered = filtered.filter(item => {
+                        const daysToNext = item.days_to_next;
+                        return daysToNext !== null && 
+                               daysToNext !== undefined && 
+                               typeof daysToNext === 'number' && 
+                               daysToNext > 0;
+                    });
+                    filterLabel = '⏰ 即将到来';
+                    break;
+                case 'all':
+                default:
+                    break;
+            }
+            
+            if (filter !== 'upcoming') {
+                renderAnniversaries(filtered, filterLabel);
+            }
+        }
+        
+        // =============================================
+        // 即将到来 - 天数范围筛选
+        // =============================================
+        function applyUpcomingFilter() {
+            const daysLimit = parseInt(document.getElementById('upcomingDays').value);
+            
+            let filtered = allAnniversaries.filter(item => {
+                const daysToNext = item.days_to_next;
+                return daysToNext !== null && 
+                       daysToNext !== undefined && 
+                       typeof daysToNext === 'number' && 
+                       daysToNext > 0 && 
+                       daysToNext <= daysLimit;
+            });
+            
+            filtered.sort((a, b) => (a.days_to_next || 999) - (b.days_to_next || 999));
+            
+            document.getElementById('upcomingCountLabel').textContent = `共 ${filtered.length} 项`;
+            
+            const daysLabel = daysLimit >= 9999 ? '全部未来' : `${daysLimit}天内`;
+            renderAnniversaries(filtered, `⏰ 即将到来 (${daysLabel})`);
+        }
+        
+        // =============================================
+        // 渲染纪念日列表
+        // =============================================
+        function renderAnniversaries(anniversaries, filterLabel) {
+            const container = document.getElementById('anniversaryList');
+            const empty = document.getElementById('emptyState');
+            const filterInfo = document.getElementById('filterInfo');
+            
+            if (currentFilter !== 'all') {
+                filterInfo.style.display = 'flex';
+                document.getElementById('filterLabel').textContent = `📌 当前筛选：${filterLabel}`;
+                document.getElementById('filterCount').textContent = `共 ${anniversaries.length} 项`;
+            } else {
+                filterInfo.style.display = 'none';
+            }
+            
+            if (anniversaries.length === 0) {
+                container.innerHTML = '';
+                empty.style.display = 'block';
+                if (currentFilter !== 'all') {
+                    document.getElementById('emptyText').textContent = '没有匹配的纪念日';
+                    document.getElementById('emptySub').textContent = '试试切换其他筛选条件 💕';
+                } else {
+                    document.getElementById('emptyText').textContent = '还没有纪念日';
+                    document.getElementById('emptySub').textContent = '点击右上角「添加纪念日」记录你们的每一个重要时刻 💕';
+                }
+                return;
+            }
+            empty.style.display = 'none';
+            
+            container.innerHTML = anniversaries.map(item => {
+                const daysPassed = item.days_passed || 0;
+                const daysPassedDisplay = Math.abs(daysPassed);
+                const daysToNext = item.days_to_next || 0;
+                const isToday = item.is_today;
+                const isImportant = item.is_important;
+                const isUpcoming = item.is_upcoming;
+                
+                let cardClass = 'anniversary-card';
+                if (isImportant) cardClass += ' important';
+                if (isToday) cardClass += ' today';
+                if (isUpcoming) cardClass += ' upcoming';
+                
+                const dateObj = new Date(item.event_date);
+                const dateStr = dateObj.toLocaleDateString('zh-CN');
+                const nextDateStr = item.next_date ? new Date(item.next_date).toLocaleDateString('zh-CN') : dateStr;
+                
+                let tags = '';
+                if (isToday) {
+                    tags += `<span class="tag tag-today">🎉 就是今天！</span>`;
+                }
+                if (isUpcoming && !isToday) {
+                    tags += `<span class="tag tag-upcoming">⏰ 即将到来</span>`;
+                }
+                
+                let nextDisplay = '';
+                if (!isToday && daysToNext > 0) {
+                    nextDisplay = `→ 下次 ${nextDateStr} · 还有 ${daysToNext} 天`;
+                } else if (!isToday && daysToNext <= 0) {
+                    nextDisplay = `→ 下次 ${nextDateStr}`;
+                }
+                
+                return `
+                    <div class="${cardClass}">
+                        <div class="card-left">
+                            <div class="category">
+                                ${item.category || '纪念日'}
+                                ${tags}
+                            </div>
+                            <div class="title">${item.title}</div>
+                            <div class="date">
+                                📅 最初 ${dateStr}
+                                ${nextDisplay ? ` <span class="highlight">${nextDisplay}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="card-right">
+                            <div class="days">${daysPassedDisplay}</div>
+                            <div class="days-label">${daysPassed >= 0 ? '天前' : '天后'}</div>
+                            ${!isToday && daysToNext > 0 ? `<div class="next-days">⏰ ${daysToNext} 天后</div>` : ''}
+                            ${isToday ? `<div class="next-days" style="color:#ff6b9d;">💕 就是今天！</div>` : ''}
+                        </div>
+                        <div class="card-actions">
+                            <button class="edit-btn" onclick="showEditModal(${item.id})">✏️</button>
+                            <button class="delete-btn" onclick="deleteAnniversary(${item.id})">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // =============================================
+        // 更新统计
+        // =============================================
+        function updateSummary(anniversaries) {
+            const total = anniversaries.length;
+            const important = anniversaries.filter(a => a.is_important).length;
+            const today = anniversaries.filter(a => a.is_today).length;
+            const upcoming = anniversaries.filter(a => {
+                const daysToNext = a.days_to_next;
+                return daysToNext !== null && daysToNext !== undefined && daysToNext > 0 && daysToNext <= 30;
+            }).length;
+            
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('importantCount').textContent = important;
+            document.getElementById('todayCount').textContent = today;
+            document.getElementById('upcomingCount').textContent = upcoming;
+        }
+        
+        // =============================================
+        // 显示添加弹窗
+        // =============================================
+        function showAddModal() {
+            editingId = null;
+            document.getElementById('modalTitle').textContent = '💕 添加纪念日';
+            document.getElementById('editId').value = '';
+            document.getElementById('formTitle').value = '';
+            document.getElementById('formDate').value = '';
+            document.getElementById('formCategory').value = '恋爱纪念日';
+            document.getElementById('formImportant').checked = false;
+            document.getElementById('modal').classList.add('active');
+        }
+        
+        // =============================================
+        // 显示编辑弹窗
+        // =============================================
+        async function showEditModal(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/anniversaries?user_id=${user.id}`);
+                const result = await response.json();
+                const item = result.data.find(a => a.id === id);
+                
+                if (item) {
+                    editingId = id;
+                    document.getElementById('modalTitle').textContent = '✏️ 编辑纪念日';
+                    document.getElementById('editId').value = id;
+                    document.getElementById('formTitle').value = item.title;
+                    document.getElementById('formDate').value = item.event_date;
+                    document.getElementById('formCategory').value = item.category || '恋爱纪念日';
+                    document.getElementById('formImportant').checked = item.is_important || false;
+                    document.getElementById('modal').classList.add('active');
+                }
+            } catch (error) {
+                alert('加载数据失败');
+                console.error(error);
+            }
+        }
+        
+        // =============================================
+        // 关闭弹窗
+        // =============================================
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+        
+        // =============================================
+        // 保存纪念日
+        // =============================================
+        async function saveAnniversary() {
+            const title = document.getElementById('formTitle').value.trim();
+            const event_date = document.getElementById('formDate').value;
+            const category = document.getElementById('formCategory').value;
+            const is_important = document.getElementById('formImportant').checked;
+            const editId = document.getElementById('editId').value;
+            
+            if (!title) {
+                alert('请填写标题 💕');
+                return;
+            }
+            
+            if (!event_date) {
+                alert('请选择日期 📅');
+                return;
+            }
+            
+            const data = {
+                user_id: user.id,
+                title,
+                event_date,
+                category,
+                is_important
+            };
+            
+            try {
+                let url = `${API_BASE_URL}/api/anniversaries`;
+                let method = 'POST';
+                
+                if (editId) {
+                    url += `/${editId}`;
+                    method = 'PUT';
+                }
+                
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(result.message);
+                    closeModal();
+                    loadAnniversaries();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                alert('保存失败，请确保服务器已启动');
+                console.error(error);
+            }
+        }
+        
+        // =============================================
+        // 删除纪念日
+        // =============================================
+        async function deleteAnniversary(id) {
+            if (!confirm('确定要删除这个纪念日吗？💕')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/anniversaries/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(result.message);
+                    loadAnniversaries();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                alert('删除失败，请确保服务器已启动');
+                console.error(error);
+            }
+        }
+        
+        // =============================================
+        // 点击外部关闭弹窗
+        // =============================================
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // =============================================
+        // 快捷键
+        // =============================================
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+        
+        // =============================================
+        // 初始化
+        // =============================================
+        loadAnniversaries();
+        
+        console.log('💕 纪念日页面已加载');
+    </script>
+</body>
+</html>
